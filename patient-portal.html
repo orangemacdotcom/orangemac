@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Patient Portal — Resolve</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { font-family: 'Inter', sans-serif; background: #eef0f5; overflow: hidden; height: 100vh; color: #1e2235; }
+  :root {
+    --sidebar-top: #23263a;
+    --sidebar-blue: #2d5be3;
+    --sidebar-blue-dark: #2450cc;
+    --nav-active-bg: rgba(255,255,255,0.18);
+    --blue: #2d5be3;
+    --blue-light: #e8eeff;
+    --blue-mid: #c7d4fd;
+    --content-bg: #eef0f5;
+    --panel-bg: #ffffff;
+    --border: #e3e6ef;
+    --text-primary: #1e2235;
+    --text-secondary: #5a6072;
+    --text-tertiary: #9aa0b4;
+    --green: #1db87e;
+    --green-bg: #e6f9f2;
+    --amber: #f59e0b;
+    --amber-bg: #fef3c7;
+    --red: #ef4444;
+    --radius: 8px;
+    --shadow: 0 1px 4px rgba(30,34,53,0.07), 0 1px 2px rgba(30,34,53,0.04);
+    --shadow-md: 0 4px 12px rgba(30,34,53,0.10);
+    --tab-bar-h: 62px;
+  }
+  input, textarea, button { font-family: inherit; }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #d1d5e0; border-radius: 99px; }
+  @keyframes slideUp {
+    from { transform: translateY(24px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-8px)}
+    40%{transform:translateX(8px)}
+    60%{transform:translateX(-6px)}
+    80%{transform:translateX(6px)}
+  }
+  a.tel-link { color: inherit; text-decoration: none; }
+  a.tel-link:hover { text-decoration: none; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+/* ── DATA ─────────────────────────────────────────────── */
+const patient = {
+  name: "Wickliffe, Adam",
+  firstName: "Adam", lastName: "Wickliffe",
+  id: "PT-00291047", mr: "MR-512304",
+  dob: "01/01/2000", sex: "M",
+  address: "4821 Elmwood Drive\nSpringfield, IL 62704",
+  status: "Active",
+  phone: "(217) 555-0193",
+  caregiver: "Sarah Wickliffe (Spouse)",
+  caregiverPhone: "(217) 555-0207",
+  hospice: "Heartland Hospice — Springfield",
+  team: "Team Alpha",
+};
+
+const orders = [
+  { id:"ORD-2024-0901", status:"Scheduled", date:"2026-02-22", type:"delivery",
+    items:["Oxygen Concentrator — 5L","Nasal Cannula (×2)","Humidifier Bottle"],
+    office:{ name:"Springfield DME Center", phone:"(217) 555-0200", addr:"400 Medical Dr, Springfield, IL 62702" },
+    nurse:{ name:"James Patel, RN", phone:"(217) 555-0298", email:"j.patel@heartlandhospice.com" },
+    fulfillOn:"2026-02-25",
+    instructions:"Patient requires 2L continuous flow. Place concentrator in living room near recliner. Ensure backup cannulas are left with family.",
+    notes:"",
+    tracking:[
+      { label:"Order Received",        date:"2026-02-22", done:true },
+      { label:"Processing",             date:"2026-02-23", done:true },
+      { label:"Scheduled for Delivery", date:"2026-02-25", done:false, upcoming:true },
+      { label:"Delivered",              date:null,         done:false },
+    ]},
+  { id:"ORD-2024-0847", status:"Delivered", date:"2026-02-18", type:"delivery",
+    items:["Hospital Bed — Full Electric","Overbed Table","Bed Rails (pair)"],
+    office:{ name:"Springfield DME Center", phone:"(217) 555-0200", addr:"400 Medical Dr, Springfield, IL 62702" },
+    nurse:{ name:"Sarah Chen, RN", phone:"(217) 555-0312", email:"s.chen@heartlandhospice.com" },
+    fulfillOn:"2026-02-18",
+    instructions:"Deliver to front entrance. Second floor, elevator available. Set up bed in master bedroom per family request.",
+    notes:"",
+    tracking:[
+      { label:"Order Received",  date:"2026-02-18", done:true },
+      { label:"Processing",       date:"2026-02-18", done:true },
+      { label:"Out for Delivery", date:"2026-02-18", done:true },
+      { label:"Delivered",        date:"2026-02-18", done:true },
+    ]},
+  { id:"ORD-2024-0765", status:"Delivered", date:"2026-01-30", type:"delivery",
+    items:["Wheelchair — Standard","Wheelchair Cushion","Nasal Cannula (×1)"],
+    office:{ name:"Springfield DME Center", phone:"(217) 555-0200", addr:"400 Medical Dr, Springfield, IL 62702" },
+    nurse:{ name:"Sarah Chen, RN", phone:"(217) 555-0312", email:"s.chen@heartlandhospice.com" },
+    fulfillOn:"2026-01-30",
+    instructions:"Adjust footrests to patient height. Train caregiver on brake usage.",
+    notes:"Caregiver trained on proper use.",
+    tracking:[
+      { label:"Order Received",  date:"2026-01-30", done:true },
+      { label:"Processing",       date:"2026-01-30", done:true },
+      { label:"Out for Delivery", date:"2026-01-30", done:true },
+      { label:"Delivered",        date:"2026-01-30", done:true },
+    ]},
+  { id:"ORD-2024-0521", status:"Delivered", date:"2025-11-08", type:"delivery",
+    items:["Suction Machine"],
+    office:{ name:"Springfield DME Center", phone:"(217) 555-0200", addr:"400 Medical Dr, Springfield, IL 62702" },
+    nurse:{ name:"James Patel, RN", phone:"(217) 555-0298", email:"j.patel@heartlandhospice.com" },
+    fulfillOn:"2025-11-10",
+    instructions:"Deliver suction machine to master bedroom. Train caregiver on proper use.",
+    notes:"Caregiver trained on use.",
+    tracking:[
+      { label:"Order Received",  date:"2025-11-08", done:true },
+      { label:"Processing",       date:"2025-11-09", done:true },
+      { label:"Out for Delivery", date:"2025-11-10", done:true },
+      { label:"Delivered",        date:"2025-11-10", done:true },
+    ]},
+  { id:"ORD-2024-0421", status:"Delivered", date:"2025-07-13", type:"delivery",
+    items:["Rollator Walker"],
+    office:{ name:"Springfield DME Center", phone:"(217) 555-0200", addr:"400 Medical Dr, Springfield, IL 62702" },
+    nurse:{ name:"Sarah Chen, RN", phone:"(217) 555-0312", email:"s.chen@heartlandhospice.com" },
+    fulfillOn:"2025-07-15",
+    instructions:"Adjust walker to patient height. Train caregiver on brake and seat use.",
+    notes:"",
+    tracking:[
+      { label:"Order Received",  date:"2025-07-13", done:true },
+      { label:"Processing",       date:"2025-07-14", done:true },
+      { label:"Out for Delivery", date:"2025-07-15", done:true },
+      { label:"Delivered",        date:"2025-07-15", done:true },
+    ]},
+  { id:"ORD-2024-0312", status:"Delivered", date:"2025-09-01", type:"delivery",
+    items:["Hospital Bed — Semi-Electric"],
+    office:{ name:"Springfield DME Center", phone:"(217) 555-0200", addr:"400 Medical Dr, Springfield, IL 62702" },
+    nurse:{ name:"Sarah Chen, RN", phone:"(217) 555-0312", email:"s.chen@heartlandhospice.com" },
+    fulfillOn:"2025-09-03",
+    instructions:"Set up semi-electric bed in master bedroom. Ensure head and foot controls are functioning.",
+    notes:"",
+    tracking:[
+      { label:"Order Received",  date:"2025-09-01", done:true },
+      { label:"Processing",       date:"2025-09-02", done:true },
+      { label:"Out for Delivery", date:"2025-09-03", done:true },
+      { label:"Delivered",        date:"2025-09-03", done:true },
+    ]},
+  { id:"ORD-2024-0612", status:"Picked Up", date:"2025-11-05", type:"pickup",
+    items:["Suction Machine","Hospital Bed — Semi-Electric"],
+    office:{ name:"Springfield DME Center", phone:"(217) 555-0200", addr:"400 Medical Dr, Springfield, IL 62702" },
+    nurse:{ name:"Sarah Chen, RN", phone:"(217) 555-0312", email:"s.chen@heartlandhospice.com" },
+    fulfillOn:"2026-01-04",
+    instructions:"Pickup from master bedroom. Patient no longer requires suction.",
+    notes:"Items retrieved in good condition.",
+    tracking:[
+      { label:"Pickup Requested", date:"2025-12-28", done:true },
+      { label:"Scheduled",        date:"2026-01-02", done:true },
+      { label:"Out for Pickup",   date:"2026-01-04", done:true },
+      { label:"Picked Up",        date:"2026-01-04", done:true },
+    ]},
+];
+
+const equipment = {
+  rentals: [
+    { id:"EQ-1001", name:"Hospital Bed — Full Electric", asset:"A-4821", serial:"HB-44821", deliveredOn:"2026-02-18", rate:"$185.00/mo", orderNums:["ORD-2024-0847"], description:"Full-electric adjustable hospital bed with head, foot, and height controls. Includes side rails and safety features for comfortable repositioning.", infoSheets:[{name:"Full Electric Bed — Patient Guide",url:"#"},{name:"Bed Safety & Positioning Guide",url:"#"}] },
+    { id:"EQ-1002", name:"Oxygen Concentrator — 5L",    asset:"A-7213", serial:"OC-77213", deliveredOn:"2026-02-25", rate:"$125.00/mo", orderNums:["ORD-2024-0901"], description:"Concentrates ambient air to deliver up to 5 liters per minute of supplemental oxygen. Includes low-pressure alarm for continuous home use.", infoSheets:[{name:"Oxygen Concentrator Patient Guide",url:"#"},{name:"Home Oxygen Safety Guide",url:"#"}] },
+    { id:"EQ-2001", name:"Overbed Table",                asset:"A-3301", serial:"OT-33190", deliveredOn:"2026-02-18", rate:"$45.00/mo",  orderNums:["ORD-2024-0847"], description:"Height-adjustable table that swings over the bed for meals, activities, and medical equipment placement." },
+    { id:"EQ-2002", name:"Bed Rails (pair)",             asset:"A-3302", serial:"BR-55472", deliveredOn:"2026-02-18", rate:"$25.00/mo",  orderNums:["ORD-2024-0847"], description:"Assist rails that attach to the bed frame to support repositioning and reduce fall risk." },
+    { id:"EQ-2003", name:"Wheelchair — Standard",        asset:"A-2201", serial:"WC-19834", deliveredOn:"2026-01-30", rate:"$85.00/mo",  orderNums:["ORD-2024-0765"], description:"Standard manual wheelchair with padded seat, swing-away footrests, and foldable frame for easy transport.", infoSheets:[{name:"Wheelchair User Guide",url:"#"}] },
+    { id:"EQ-2004", name:"Wheelchair Cushion",           asset:"A-2202", serial:"WCC-8821", deliveredOn:"2026-01-30", rate:"$20.00/mo",  orderNums:["ORD-2024-0765"], description:"Pressure-relieving foam cushion for use with the wheelchair to improve comfort and reduce skin breakdown risk." },
+    { id:"EQ-3001", name:"Cane",                                          deliveredOn:"2026-01-15", rate:"$10.00/mo",  orderNums:["ORD-2024-0765"], description:"Single-point aluminum cane with ergonomic handle for balance and mobility assistance." },
+    { id:"EQ-3002", name:"E-Tank",                       lotNum:"LT-20260115", deliveredOn:"2026-01-20", rate:"$35.00/mo", orderNums:["ORD-2024-0901"], description:"Portable oxygen cylinder for emergency or backup oxygen supply. For use with a regulator and nasal cannula." },
+  ],
+  other: [
+    { id:"EQ-2005", name:"Nasal Cannula (×3)", matchNames:["Nasal Cannula (×2)","Nasal Cannula (×1)"], orderNums:["ORD-2024-0901","ORD-2024-0765"], orderDetails:{"ORD-2024-0901":{qty:2,deliveredOn:"2026-02-25"},"ORD-2024-0765":{qty:1,deliveredOn:"2026-01-30"}}, description:"Soft-tip nasal cannula for delivery of supplemental oxygen from concentrator or tank. Single-use; replace as directed.", infoSheets:[{name:"Nasal Cannula Care & Replacement Guide",url:"#"}] },
+    { id:"EQ-2006", name:"Oxygen Tubing (25-foot)", deliveredOn:"2026-02-25", orderNums:["ORD-2024-0901"], description:"Extension tubing connecting the oxygen concentrator to the nasal cannula, allowing movement throughout the room." },
+    { id:"EQ-2007", name:"N95 Mask (×3)",           deliveredOn:"2026-02-25", orderNums:["ORD-2024-0901"], description:"NIOSH-approved N95 respirator masks for protection during close patient care or transport." },
+    { id:"EQ-2008", name:"Y-Connector",             deliveredOn:"2026-02-25", orderNums:["ORD-2024-0901"], description:"Connects two oxygen supply lines to a single source, allowing dual-device use from one concentrator." },
+    { id:"EQ-2009", name:"Humidifier Bottle",       deliveredOn:"2026-02-25", orderNums:["ORD-2024-0901"], description:"Sterile water reservoir that attaches to the oxygen concentrator outlet to add humidity to the oxygen flow, reducing dryness and irritation in the airway." },
+  ],
+  priorRentals: [
+    { id:"EQ-0881", name:"Suction Machine",              serial:"SM-20112", deliveredOn:"2025-11-10", pickedUpOn:"2026-01-04", deliveryOrderNum:"ORD-2024-0521", pickupOrderNum:"ORD-2024-0612", description:"Portable electric suction unit for clearing airways of secretions. Used during the prior care period." },
+    { id:"EQ-0744", name:"Hospital Bed — Semi-Electric", serial:"HB-31022", deliveredOn:"2025-09-03", pickedUpOn:"2025-11-09", deliveryOrderNum:"ORD-2024-0312", pickupOrderNum:"ORD-2024-0612", description:"Semi-electric hospital bed with electric head and foot adjustment and manual height control. Used during the prior care period." },
+    { id:"EQ-0601", name:"Rollator Walker",              serial:"RW-88341", deliveredOn:"2025-07-15", pickedUpOn:"2025-09-01", deliveryOrderNum:"ORD-2024-0421", pickupOrderNum:"ORD-2024-0502", description:"Four-wheeled rollator with hand brakes, padded seat, and storage basket for ambulation assistance." },
+  ],
+};
+
+const hospice = {
+  name:"Heartland Hospice — Springfield",
+  mainPhone:"(217) 555-0100",
+  afterHours:"(217) 555-0199",
+  address:"200 Hospice Lane\nSpringfield, IL 62701",
+};
+
+/* ── SURVEY CONFIG ────────────────────────────────────── */
+const SURVEY_ORDER_ID = 'ORD-2024-0847'; // most-recent delivery with a pending survey
+
+/* ── HELPERS ──────────────────────────────────────────── */
+const VAR_R = '6px';
+const var_r = VAR_R;
+const fmt = (d) => d ? new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+
+/* Convert phone number string to tel: href digits */
+const telDigits = (ph) => ph.replace(/\D/g,'');
+
+/* Wrap phone patterns in a tel: anchor inside a string */
+function withPhoneLinks(text) {
+  if (!text || typeof text !== 'string') return text;
+  const phoneRe = /\(\d{3}\)\s*\d{3}-\d{4}/g;
+  const parts = [];
+  let last = 0, m;
+  while ((m = phoneRe.exec(text)) !== null) {
+    if (m.index > last) parts.push(text.slice(last, m.index));
+    const digits = m[0].replace(/\D/g,'');
+    parts.push(<a key={m.index} href={`tel:${digits}`} className="tel-link">{m[0]}</a>);
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) parts.push(text.slice(last));
+  return parts.length ? parts : text;
+}
+
+/* ── ICONS ─────────────────────────────────────────────── */
+const I = {
+  Menu: ()=><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>,
+  Patient: ({size=16})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+  Orders: ({size=16})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>,
+  Equipment: ({size=16})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>,
+  Hospice: ({size=16})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+  Chevron: ()=><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>,
+  ChevronDown: ()=><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><polyline points="6 9 12 15 18 9"/></svg>,
+  ChevronLeft: ()=><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>,
+  Close: ()=><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  Camera: ()=><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>,
+  Print: ()=><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>,
+  Edit: ()=><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+  Pickup: ()=><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>,
+  FileText: ()=><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>,
+  Pdf: ()=>(
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="#fde8e8" stroke="#ef4444" strokeWidth="1.6" strokeLinecap="round"/>
+      <polyline points="14 2 14 8 20 8" stroke="#ef4444" strokeWidth="1.6" strokeLinecap="round"/>
+      <text x="12" y="17.5" textAnchor="middle" fontSize="5" fontWeight="800" fill="#ef4444" fontFamily="Inter,Arial,sans-serif" letterSpacing="0.3">PDF</text>
+    </svg>
+  ),
+  ClipboardSurvey: ()=>(
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+      <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+      <line x1="9" y1="12" x2="15" y2="12"/>
+      <line x1="9" y1="16" x2="13" y2="16"/>
+    </svg>
+  ),
+  Phone: ()=><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.13 11.1 19.79 19.79 0 0 1 1.06 2.48 2 2 0 0 1 3.04.3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 7.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.92 14l.08 2.92z"/></svg>,
+  /* Clipboard icon for Delivery (D) — matches attached image style */
+  ClipboardD: ({size=32})=>(
+    <svg width={size} height={size} viewBox="0 0 34 34" fill="none">
+      <rect width="34" height="34" rx="7" fill="#4a7cf5"/>
+      {/* Board */}
+      <rect x="8" y="11" width="18" height="16" rx="2" fill="white" opacity="0.95"/>
+      {/* Clip holder */}
+      <rect x="13" y="8"  width="8" height="6" rx="2" fill="white" opacity="0.95"/>
+      <rect x="15" y="7"  width="4" height="4" rx="1.2" fill="#4a7cf5"/>
+      {/* Letter */}
+      <text x="17" y="23.5" textAnchor="middle" fontSize="8.5" fontWeight="800" fill="#4a7cf5" fontFamily="Inter,Arial,sans-serif" letterSpacing="-0.5">D</text>
+    </svg>
+  ),
+  /* Clipboard icon for Pickup (P) */
+  ClipboardP: ({size=32})=>(
+    <svg width={size} height={size} viewBox="0 0 34 34" fill="none">
+      <rect width="34" height="34" rx="7" fill="#6c63ff"/>
+      {/* Board */}
+      <rect x="8" y="11" width="18" height="16" rx="2" fill="white" opacity="0.95"/>
+      {/* Clip holder */}
+      <rect x="13" y="8"  width="8" height="6" rx="2" fill="white" opacity="0.95"/>
+      <rect x="15" y="7"  width="4" height="4" rx="1.2" fill="#6c63ff"/>
+      {/* Letter */}
+      <text x="17" y="23.5" textAnchor="middle" fontSize="8.5" fontWeight="800" fill="#6c63ff" fontFamily="Inter,Arial,sans-serif" letterSpacing="-0.5">P</text>
+    </svg>
+  ),
+};
+
+/* ── SHARED UI COMPONENTS ─────────────────────────────── */
+function Badge({ status }) {
+  const map = {
+    Active:      { bg:'#e6f9f2', color:'#0d8a5c', dot:'#1db87e' },
+    Delivered:   { bg:'#e6f9f2', color:'#0d8a5c', dot:'#1db87e' },
+    Pending:     { bg:'#fef3c7', color:'#92400e', dot:'#f59e0b' },
+    Scheduled:   { bg:'#fef3c7', color:'#92400e', dot:'#f59e0b' },
+    Inactive:    { bg:'#f3f4f6', color:'#6b7280', dot:'#9ca3af' },
+    Completed:   { bg:'#f3f4f6', color:'#6b7280', dot:'#9ca3af' },
+    'Picked Up': { bg:'#f3f4f6', color:'#6b7280', dot:'#9ca3af' },
+  };
+  const c = map[status] || map.Active;
+  return (
+    <span style={{ display:'inline-flex', alignItems:'center', gap:5, padding:'3px 9px', borderRadius:99, background:c.bg, color:c.color, fontSize:12, fontWeight:600 }}>
+      <span style={{ width:6, height:6, borderRadius:'50%', background:c.dot, flexShrink:0 }} />{status}
+    </span>
+  );
+}
+
+function SectionLabel({ children }) {
+  return <div style={{ fontSize:11, fontWeight:600, color:'var(--text-tertiary)', textTransform:'uppercase', letterSpacing:'0.07em', margin:'18px 0 8px' }}>{children}</div>;
+}
+
+/* DetailRow: renders value with auto-linked phone numbers */
+function DetailRow({ label, value, pre, onClick }) {
+  if (!value && value !== 0) return null;
+  const rendered = typeof value === 'string' ? withPhoneLinks(value) : value;
+  return (
+    <div style={{ display:'flex', gap:10, padding:'9px 0', borderBottom:'1px solid var(--border)' }}>
+      <div style={{ flex:1, minWidth:0 }}>
+        <div style={{ fontSize:11, color:'var(--text-tertiary)', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:2 }}>{label}</div>
+        <div
+          onClick={onClick}
+          style={{ fontSize:13, fontWeight:400, lineHeight:1.5, whiteSpace:pre?'pre-line':'normal', color:'var(--text-primary)', cursor:onClick?'pointer':'default', textDecoration:'none' }}
+        >{rendered}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ── RESOLVE LOGO ─────────────────────────────────────── */
+function ResolveLogo() {
+  return (
+    <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+        <circle cx="9"  cy="13" r="7" fill="#ff7a45" opacity="0.9"/>
+        <circle cx="17" cy="13" r="7" fill="#4f90f0" opacity="0.9"/>
+      </svg>
+      <span style={{ fontSize:17, fontWeight:700, color:'#fff', letterSpacing:'-0.01em' }}>resolve</span>
+    </div>
+  );
+}
+
+/* ── CONTACT HOSPICE MODAL ────────────────────────────── */
+function ContactHospiceModal({ onClose }) {
+  const [message, setMessage]           = useState('');
+  const [urgent, setUrgent]             = useState(false);
+  const [showUrgentAlert, setShowUrgentAlert] = useState(false);
+  const [sent, setSent]                 = useState(false);
+  const [countdown, setCountdown]       = useState(10);
+
+  /* Auto-close countdown after send */
+  useEffect(() => {
+    if (!sent) return;
+    if (countdown <= 0) { onClose(); return; }
+    const t = setTimeout(() => setCountdown(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [sent, countdown]);
+
+  const handleUrgentChange = (e) => {
+    setUrgent(e.target.checked);
+    if (e.target.checked) setShowUrgentAlert(true);
+  };
+
+  const handleSend = () => {
+    if (!message.trim()) return;
+    setSent(true);
+  };
+
+  const digits = telDigits(hospice.mainPhone);
+
+  return (
+    /* Backdrop */
+    <div
+      onClick={(e) => { if (e.target === e.currentTarget && !sent) onClose(); }}
+      style={{ position:'fixed', inset:0, zIndex:300, background:'rgba(20,24,40,0.55)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}
+    >
+      {/* Main modal card */}
+      <div style={{ position:'relative', background:'#fff', borderRadius:14, boxShadow:'0 8px 32px rgba(30,34,53,0.18)', width:'100%', maxWidth:420, animation:'fadeIn 0.2s ease', overflow:'hidden' }}>
+
+        {/* Header */}
+        <div style={{ padding:'18px 20px 0', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+          <span style={{ fontSize:16, fontWeight:700, color:'var(--text-primary)' }}>Contact Hospice</span>
+          {!sent && (
+            <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-tertiary)', padding:'4px 6px', borderRadius:6 }}><I.Close/></button>
+          )}
+        </div>
+
+        {/* Body */}
+        <div style={{ padding:'16px 20px 22px', textAlign:'center' }}>
+          {!sent ? (
+            <>
+              <p style={{ fontSize:14, color:'var(--text-secondary)', lineHeight:1.6, marginBottom:20 }}>
+                Need to reach out? Call us at the number below or send a message directly. We'll be in touch!
+              </p>
+
+              {/* Phone number */}
+              <a
+                href={`tel:${digits}`}
+                style={{ display:'inline-flex', alignItems:'center', gap:8, fontSize:18, fontWeight:700, color:'var(--text-primary)', textDecoration:'none', padding:'10px 20px', background:'var(--blue-light)', borderRadius:8, marginBottom:16 }}
+              >
+                <I.Phone/> {hospice.mainPhone}
+              </a>
+
+              {/* Divider */}
+              <div style={{ display:'flex', alignItems:'center', gap:12, margin:'4px 0 16px' }}>
+                <div style={{ flex:1, height:1, background:'var(--border)' }}/>
+                <span style={{ fontSize:12, fontWeight:600, color:'var(--text-tertiary)', letterSpacing:'0.05em' }}>OR</span>
+                <div style={{ flex:1, height:1, background:'var(--border)' }}/>
+              </div>
+
+              {/* Message area */}
+              <div style={{ marginBottom:14, textAlign:'left' }}>
+                <label style={{ display:'block', fontSize:12, fontWeight:600, color:'var(--text-secondary)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:7, textAlign:'center' }}>Send a Message</label>
+                <textarea
+                  value={message}
+                  onChange={e => setMessage(e.target.value)}
+                  placeholder="Type your message here…"
+                  rows={4}
+                  style={{ width:'100%', border:'1px solid var(--border)', borderRadius:var_r, padding:'10px 12px', fontSize:13, color:'var(--text-primary)', resize:'vertical', outline:'none', lineHeight:1.5, textAlign:'left' }}
+                  onFocus={e=>e.target.style.borderColor='var(--blue)'}
+                  onBlur={e=>e.target.style.borderColor='var(--border)'}
+                />
+              </div>
+
+              {/* Urgent checkbox */}
+              <label style={{ display:'inline-flex', alignItems:'center', gap:8, cursor:'pointer', fontSize:13, color:'var(--text-secondary)', marginBottom:20 }}>
+                <input
+                  type="checkbox"
+                  checked={urgent}
+                  onChange={handleUrgentChange}
+                  style={{ width:15, height:15, accentColor:'var(--blue)', cursor:'pointer' }}
+                />
+                Urgent Request?
+              </label>
+
+              {/* Send button */}
+              <button
+                onClick={handleSend}
+                disabled={!message.trim()}
+                style={{ display:'block', width:'100%', padding:'11px', background: message.trim() ? 'var(--blue)' : '#c7d4fd', color:'#fff', border:'none', borderRadius:var_r, fontSize:14, fontWeight:600, cursor: message.trim() ? 'pointer' : 'not-allowed', transition:'background 0.15s' }}
+              >Send Message</button>
+            </>
+          ) : (
+            /* ── Sent confirmation ── */
+            <div style={{ padding:'12px 0 4px' }}>
+              <div style={{ width:52, height:52, background:'var(--green-bg)', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px' }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1db87e" strokeWidth="2.5" strokeLinecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <p style={{ fontSize:15, fontWeight:600, color:'var(--text-primary)', marginBottom:8 }}>
+                Your message has been sent.<br/>We will be in touch!
+              </p>
+              <p style={{ fontSize:13, color:'var(--text-tertiary)', marginTop:12 }}>
+                This window will close in <span style={{ fontWeight:700, color:'var(--text-secondary)' }}>{countdown}</span> second{countdown !== 1 ? 's' : ''}…
+              </p>
+              {/* Progress bar */}
+              <div style={{ height:3, background:'var(--border)', borderRadius:99, margin:'16px 0 4px', overflow:'hidden' }}>
+                <div style={{ height:'100%', background:'var(--blue)', borderRadius:99, width:`${(countdown/10)*100}%`, transition:'width 0.9s linear' }}/>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Urgent alert — small overlay on top of modal */}
+        {showUrgentAlert && (
+          <div style={{ position:'absolute', inset:0, background:'rgba(30,34,53,0.45)', display:'flex', alignItems:'center', justifyContent:'center', padding:24, borderRadius:14 }}>
+            <div style={{ background:'#fff', borderRadius:10, padding:'22px 22px 18px', maxWidth:280, textAlign:'center', boxShadow:'0 4px 20px rgba(30,34,53,0.18)', animation:'fadeIn 0.15s ease' }}>
+              <div style={{ width:38, height:38, background:'#fff7ed', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 12px' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2.2" strokeLinecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <p style={{ fontSize:13, color:'var(--text-secondary)', lineHeight:1.6, marginBottom:16 }}>
+                For urgent requests, please consider calling{' '}
+                <a href={`tel:${digits}`} className="tel-link" style={{ fontWeight:600, color:'var(--text-primary)' }}>{hospice.mainPhone}</a>
+                {' '}as messages may be delayed.
+              </p>
+              <button
+                onClick={() => setShowUrgentAlert(false)}
+                style={{ padding:'8px 32px', background:'var(--blue)', color:'#fff', border:'none', borderRadius:var_r, fontSize:13, fontWeight:600, cursor:'pointer' }}
+              >OK</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ── ORDER TRACKING ───────────────────────────────────── */
+function OrderTracking({ order }) {
+  const steps = order.tracking || [];
+  return (
+    <div style={{ padding:'8px 0 4px' }}>
+      {steps.map((step, i) => {
+        const isLast = i === steps.length - 1;
+        const isUpcoming = !step.done && step.upcoming;
+        const isFuture   = !step.done && !step.upcoming;
+        return (
+          <div key={i} style={{ display:'flex', gap:12 }}>
+            <div style={{ display:'flex', flexDirection:'column', alignItems:'center', flexShrink:0 }}>
+              <div style={{ width:18, height:18, borderRadius:'50%', flexShrink:0, background:step.done?'var(--blue)':isUpcoming?'var(--blue-light)':'#f3f4f6', border:step.done?'2px solid var(--blue)':isUpcoming?'2px solid var(--blue)':'2px solid #d1d5e0', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                {step.done && <svg width="9" height="9" viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+              </div>
+              {!isLast && <div style={{ width:2, flex:1, minHeight:24, background:step.done?'var(--blue-mid)':'#e3e6ef', margin:'2px 0' }} />}
+            </div>
+            <div style={{ paddingBottom:isLast?0:18, paddingTop:1 }}>
+              <div style={{ fontSize:13, fontWeight:step.done?600:500, color:isFuture?'var(--text-tertiary)':'var(--text-primary)', marginBottom:2 }}>
+                {step.label}
+                {isUpcoming && <span style={{ marginLeft:8, fontSize:11, fontWeight:600, color:'var(--blue)', background:'var(--blue-light)', padding:'1px 7px', borderRadius:99 }}>Upcoming</span>}
+              </div>
+              <div style={{ fontSize:12, color:step.done?'var(--text-secondary)':'var(--text-tertiary)' }}>{step.date ? fmt(step.date) : 'Pending'}</div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── PATIENT PANEL ────────────────────────────────────── */
+function PatientPanel({ onClose }) {
+  return (
+    <div style={{ display:'flex', flexDirection:'column', height:'100%' }}>
+      <div style={{ padding:'14px 18px', borderBottom:'1px solid var(--border)', background:'#fff' }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:4 }}>
+          <span style={{ fontSize:16, fontWeight:400 }}>{patient.name}</span>
+          <div style={{ display:'flex', gap:8 }}>
+            <button style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-tertiary)', padding:'4px 6px', borderRadius:6 }}><I.Print/></button>
+            <button style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-tertiary)', padding:'4px 6px', borderRadius:6 }}><I.Edit/></button>
+            <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-tertiary)', padding:'4px 6px', borderRadius:6 }}><I.Close/></button>
+          </div>
+        </div>
+        <div style={{ fontSize:11, color:'var(--text-tertiary)', display:'flex', gap:12 }}>
+          <span>{patient.id}</span><span>MR: {patient.mr}</span><span>DOB: {patient.dob}</span><span>SEX: {patient.sex}</span>
+        </div>
+      </div>
+      <div style={{ display:'flex', borderBottom:'1px solid var(--border)', background:'#fff', padding:'0 18px' }}>
+        <div style={{ padding:'10px 0 8px', borderBottom:'2px solid var(--blue)', fontSize:13, fontWeight:600, color:'var(--blue)', cursor:'pointer' }}>Patient</div>
+      </div>
+      <div style={{ flex:1, overflow:'auto', padding:'4px 18px 18px' }}>
+        <DetailRow label="Home Address" value={patient.address} pre />
+        <DetailRow label="Status"       value={patient.status} />
+        <DetailRow label="Primary Phone" value={patient.phone} />
+        <DetailRow label="Caregiver"    value={patient.caregiver} />
+        <DetailRow label="Hospice"      value={patient.hospice} />
+        <DetailRow label="Team"         value={patient.team} />
+        <div style={{ marginTop:16 }}>
+          <span style={{ fontSize:12, color:'var(--text-primary)', fontWeight:400, cursor:'pointer', textDecoration:'none' }}>View Log</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── SURVEY TAB ───────────────────────────────────────── */
+function SurveyTab({ submitted, onSubmit, orderType }) {
+  const deliveryQuestions = [
+    "The technician arrived on time.",
+    "The technician was professional and courteous.",
+    "The technician clearly explained how to use the equipment.",
+    "The equipment was clean and in good working order.",
+    "My service needs were addressed during the visit.",
+    "I feel confident in using the equipment after the visit.",
+    "I am satisfied with the service I received from Concergix.",
+    "I would recommend Concergix to friends and family.",
+  ];
+  const pickupQuestions = [
+    "The technician arrived on time.",
+    "The technician was professional and courteous.",
+    "I am satisfied with the service I received from Concergix.",
+    "I would recommend Concergix to friends and family.",
+  ];
+  const introMap = {
+    delivery: "We recently delivered medical equipment and want to ensure everything is working well. Please take a moment to rate your experience.",
+    service:  "We recently serviced medical equipment and want to ensure everything is working well. Please take a moment to rate your experience.",
+    pickup:   "We recently picked-up medical equipment and want to ensure everything is working well. Please take a moment to rate your experience.",
+  };
+  const questions = orderType === 'pickup' ? pickupQuestions : deliveryQuestions;
+  const intro     = introMap[orderType] || introMap.delivery;
+  const likert    = ["Strongly Agree","Agree","Neutral","Disagree","Strongly Disagree"];
+  const [responses, setResponses] = useState({});
+  const [comment, setComment]     = useState('');
+
+  if (submitted) {
+    return (
+      <div style={{ textAlign:'center', padding:'40px 16px' }}>
+        <div style={{ width:52, height:52, background:'var(--green-bg)', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px' }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1db87e" strokeWidth="2.5" strokeLinecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div style={{ fontSize:15, fontWeight:600, color:'var(--text-primary)', marginBottom:8 }}>Thank you for your feedback!</div>
+        <div style={{ fontSize:13, color:'var(--text-secondary)', lineHeight:1.6 }}>Your response has been recorded. We appreciate you taking the time to share your experience.</div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <p style={{ fontSize:13, color:'var(--text-secondary)', lineHeight:1.6, padding:'10px 0 6px' }}>
+        {intro}
+      </p>
+      {questions.map((q, i) => (
+        <div key={i} style={{ display:'flex', alignItems:'center', gap:10, padding:'10px 0', borderBottom:'1px solid var(--border)' }}>
+          <div style={{ flex:1, fontSize:13, color:'var(--text-primary)', lineHeight:1.4 }}>{q}</div>
+          <select
+            value={responses[i] || ''}
+            onChange={e => setResponses(r => ({...r, [i]: e.target.value}))}
+            style={{ flexShrink:0, width:140, padding:'6px 8px', border:'1px solid var(--border)', borderRadius:6, fontSize:12, background:'#fff', color: responses[i] ? 'var(--text-primary)' : 'var(--text-tertiary)', cursor:'pointer', outline:'none' }}
+          >
+            <option value="" disabled>Select…</option>
+            {likert.map(l => <option key={l} value={l}>{l}</option>)}
+          </select>
+        </div>
+      ))}
+      <div style={{ marginTop:14 }}>
+        <div style={{ fontSize:11, color:'var(--text-tertiary)', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:6 }}>Additional Comments</div>
+        <textarea
+          value={comment}
+          onChange={e => setComment(e.target.value)}
+          placeholder="Do you have any other comments or feedback to share?"
+          rows={4}
+          style={{ width:'100%', border:'1px solid var(--border)', borderRadius:var_r, padding:'9px 12px', fontSize:13, resize:'vertical', outline:'none', color:'var(--text-primary)', lineHeight:1.5 }}
+          onFocus={e => e.target.style.borderColor='var(--blue)'}
+          onBlur={e  => e.target.style.borderColor='var(--border)'}
+        />
+      </div>
+      <button
+        onClick={onSubmit}
+        style={{ marginTop:12, padding:'9px', width:'100%', background:'var(--blue)', color:'#fff', border:'none', borderRadius:var_r, fontSize:13, fontWeight:600, cursor:'pointer' }}
+      >Submit Survey</button>
+    </>
+  );
+}
+
+/* ── ORDER PANEL ──────────────────────────────────────── */
+function OrderPanel({ order, onClose, initialTab, onSurveySubmit }) {
+  const [note, setNote]           = useState(order.notes || '');
+  const [tab, setTab]             = useState(initialTab || 'detail');
+  const [selectedEq, setSelectedEq]   = useState(null);
+  const [surveySubmitted, setSurveySubmitted] = useState(false);
+  const handleSurveySubmit = () => {
+    setSurveySubmitted(true);
+    if (onSurveySubmit) onSurveySubmit();
+  };
+  if (!order) return null;
+  const allEq = [...equipment.rentals, ...equipment.other, ...equipment.priorRentals];
+  const eqByName = {};
+  allEq.forEach(eq => {
+    eqByName[eq.name] = eq;
+    if (eq.matchNames) eq.matchNames.forEach(n => { eqByName[n] = eq; });
+  });
+
+  /* Show equipment sub-panel in place, back returns to order */
+  if (selectedEq) {
+    return <EquipmentPanel eq={selectedEq} onClose={() => setSelectedEq(null)} />;
+  }
+  const tabStyle = (id) => ({
+    padding:'10px 0 8px', marginRight:20, fontSize:13, fontWeight:600, cursor:'pointer',
+    color:tab===id?'var(--blue)':'var(--text-tertiary)',
+    borderBottom:tab===id?'2px solid var(--blue)':'2px solid transparent',
+  });
+  return (
+    <div style={{ display:'flex', flexDirection:'column', height:'100%' }}>
+      <div style={{ padding:'14px 18px', borderBottom:'1px solid var(--border)', background:'#fff' }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:4 }}>
+          <span style={{ fontSize:16, fontWeight:700 }}>{order.id}</span>
+          <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-tertiary)', padding:'4px 6px', borderRadius:6 }}><I.Close/></button>
+        </div>
+        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+          <Badge status={order.status}/>
+          <span style={{ fontSize:11, color:'var(--text-tertiary)' }}>{fmt(order.date)}</span>
+        </div>
+      </div>
+      <div style={{ display:'flex', borderBottom:'1px solid var(--border)', background:'#fff', padding:'0 18px' }}>
+        <div style={tabStyle('detail')}   onClick={()=>setTab('detail')}>Order Detail</div>
+        <div style={tabStyle('tracking')} onClick={()=>setTab('tracking')}>Order Tracking</div>
+        <div style={tabStyle('survey')}   onClick={()=>setTab('survey')}>Survey</div>
+      </div>
+      <div style={{ flex:1, overflow:'auto', padding:'4px 18px 18px' }}>
+        {tab === 'detail' && (
+          <>
+            <SectionLabel>Order Items</SectionLabel>
+            {order.items.map((item,i)=>{
+              const matchedEq = eqByName[item];
+              return matchedEq ? (
+                <div key={i} onClick={()=>setSelectedEq(matchedEq)}
+                  style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'8px 10px', borderRadius:var_r, background:'var(--blue-light)', marginBottom:5, fontSize:13, cursor:'pointer', color:'var(--text-primary)' }}>
+                  <span>{item}</span>
+                  <span style={{ color:'var(--blue)', opacity:0.7 }}><I.Chevron/></span>
+                </div>
+              ) : (
+                <div key={i} style={{ padding:'8px 10px', borderRadius:var_r, background:'var(--content-bg)', marginBottom:5, fontSize:13 }}>{item}</div>
+              );
+            })}
+            <DetailRow label="Delivering Office" value={`${order.office.name}\n${order.office.phone}\n${order.office.addr}`} pre />
+            <DetailRow label="Ordering Nurse"    value={`${order.nurse.name}\n${order.nurse.phone}\n${order.nurse.email}`} pre />
+            <DetailRow label="Fulfill On"        value={fmt(order.fulfillOn)} />
+            <DetailRow label="Instructions"      value={order.instructions} pre />
+            {order.status === 'Scheduled' && (
+              <>
+                <SectionLabel>Notes</SectionLabel>
+                <textarea value={note} onChange={e=>setNote(e.target.value)} placeholder="Add a note on this order…"
+                  style={{ width:'100%', minHeight:78, border:'1px solid var(--border)', borderRadius:var_r, padding:'9px 12px', fontSize:13, resize:'vertical', outline:'none', color:'var(--text-primary)' }}
+                  onFocus={e=>e.target.style.borderColor='var(--blue)'}
+                  onBlur={e=>e.target.style.borderColor='var(--border)'} />
+                <button style={{ marginTop:8, padding:'7px 18px', background:'var(--blue)', color:'#fff', border:'none', borderRadius:var_r, fontSize:13, fontWeight:600, cursor:'pointer' }}>Save Note</button>
+              </>
+            )}
+          </>
+        )}
+        {tab === 'tracking' && (
+          <>
+            <SectionLabel>Order Status</SectionLabel>
+            <OrderTracking order={order} />
+          </>
+        )}
+        {tab === 'survey' && (
+          <>
+            <SectionLabel>{order.type === 'pickup' ? 'Pickup Survey' : order.type === 'service' ? 'Service Survey' : 'Delivery Survey'}</SectionLabel>
+            <SurveyTab submitted={surveySubmitted} onSubmit={handleSurveySubmit} orderType={order.type} />
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ── EQUIPMENT PANEL ──────────────────────────────────── */
+function EquipmentPanel({ eq, onClose }) {
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  if (!eq) return null;
+
+  if (selectedOrder) {
+    return <OrderPanel order={selectedOrder} onClose={() => setSelectedOrder(null)} />;
+  }
+
+  const isPrior             = !!eq.pickedUpOn;
+  const deliveryLinkedOrder = isPrior && eq.deliveryOrderNum ? orders.find(o=>o.id===eq.deliveryOrderNum) : null;
+  const pickupLinkedOrder   = isPrior && eq.pickupOrderNum   ? orders.find(o=>o.id===eq.pickupOrderNum)   : null;
+  return (
+    <div style={{ display:'flex', flexDirection:'column', height:'100%' }}>
+      <div style={{ padding:'14px 18px', borderBottom:'1px solid var(--border)', background:'#fff' }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:4 }}>
+          <span style={{ fontSize:16, fontWeight:400, lineHeight:1.3 }}>{eq.name}</span>
+          <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-tertiary)', padding:'4px 6px', borderRadius:6, flexShrink:0 }}><I.Close/></button>
+        </div>
+        {(eq.serial || eq.lotNum) && (
+          <div style={{ fontSize:11, color:'var(--text-tertiary)' }}>
+            {eq.serial ? `${eq.id} · S/N: ${eq.serial}` : `Lot #: ${eq.lotNum}`}
+          </div>
+        )}
+      </div>
+      <div style={{ display:'flex', borderBottom:'1px solid var(--border)', background:'#fff', padding:'0 18px' }}>
+        <div style={{ padding:'10px 0 8px', borderBottom:'2px solid var(--blue)', fontSize:13, fontWeight:600, color:'var(--blue)', cursor:'pointer' }}>Equipment Detail</div>
+      </div>
+      <div style={{ flex:1, overflow:'auto', padding:'4px 18px 18px' }}>
+        <DetailRow label="Type"         value={eq.rate ? 'Active Rental' : isPrior ? 'Prior Rental' : 'Non-Rental'} />
+        {!eq.orderDetails && <DetailRow label="Delivered On" value={fmt(eq.deliveredOn)} />}
+        {isPrior && <DetailRow label="Picked Up On" value={fmt(eq.pickedUpOn)} />}
+        {!isPrior && eq.orderNums && eq.orderNums.length > 0 && (
+          <div style={{ display:'flex', gap:10, padding:'9px 0', borderBottom:'1px solid var(--border)' }}>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ fontSize:11, color:'var(--text-tertiary)', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:2 }}>
+                {eq.orderNums.length > 1 ? 'Orders' : 'Order'}
+              </div>
+              {eq.orderNums.map((oNum,idx) => {
+                const lo = orders.find(o=>o.id===oNum);
+                const od = eq.orderDetails && eq.orderDetails[oNum];
+                return (
+                  <div key={idx} style={{ marginBottom: idx < eq.orderNums.length-1 ? 6 : 0 }}>
+                    <div onClick={lo ? ()=>setSelectedOrder(lo) : undefined} style={{ fontSize:13, fontWeight:600, color:'var(--text-primary)', cursor:lo?'pointer':'default', lineHeight:1.4 }}>{oNum}</div>
+                    {od && <div style={{ fontSize:12, fontWeight:400, color:'var(--text-tertiary)', marginTop:1 }}>×{od.qty} · Delivered {fmt(od.deliveredOn)}</div>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+        {isPrior && eq.deliveryOrderNum && <DetailRow label="Delivery Order" value={eq.deliveryOrderNum} onClick={deliveryLinkedOrder ? ()=>setSelectedOrder(deliveryLinkedOrder) : undefined} />}
+        {isPrior && eq.pickupOrderNum   && <DetailRow label="Pickup Order"   value={eq.pickupOrderNum}   onClick={pickupLinkedOrder   ? ()=>setSelectedOrder(pickupLinkedOrder)   : undefined} />}
+        {eq.description && <DetailRow label="Description" value={eq.description} />}
+        {eq.infoSheets && eq.infoSheets.length > 0 && (
+          <>
+            <SectionLabel>Info Sheets</SectionLabel>
+            {eq.infoSheets.map((sheet, i) => (
+              <a key={i} href={sheet.url} onClick={e => e.preventDefault()}
+                style={{ display:'flex', alignItems:'center', gap:9, padding:'9px 10px', borderRadius:var_r, background:'var(--content-bg)', marginBottom:5, fontSize:13, textDecoration:'none', color:'var(--text-primary)', border:'1px solid var(--border)', cursor:'pointer' }}>
+                <I.Pdf/>
+                <span style={{ flex:1 }}>{sheet.name}</span>
+                <span style={{ color:'var(--text-tertiary)', opacity:0.6 }}><I.Chevron/></span>
+              </a>
+            ))}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ── CAMERA PANEL ─────────────────────────────────────── */
+function CameraPanel({ onClose }) {
+  const [photoTaken, setPhotoTaken] = useState(false);
+  const [identifiedEq, setIdentifiedEq] = useState(null);
+
+  const handleTakePhoto = () => {
+    const rentals = equipment.rentals;
+    const randomEq = rentals[Math.floor(Math.random() * rentals.length)];
+    setIdentifiedEq(randomEq);
+    setPhotoTaken(true);
+  };
+
+  const handleRetry = () => {
+    setIdentifiedEq(null);
+    setPhotoTaken(false);
+  };
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', height:'100%' }}>
+      <div style={{ padding:'14px 18px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <span style={{ fontSize:15, fontWeight:700 }}>Identify Equipment</span>
+        <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-tertiary)' }}><I.Close/></button>
+      </div>
+      {!photoTaken ? (
+        <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:24, gap:16 }}>
+          <div style={{ width:'100%', height:200, background:'#1e2235', borderRadius:VAR_R, display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:8, color:'#fff' }}>
+            <I.Camera/><span style={{ fontSize:13, opacity:0.7 }}>Camera preview</span>
+          </div>
+          <p style={{ fontSize:13, color:'var(--text-secondary)', textAlign:'center' }}>Take a photo of your equipment to identify it.</p>
+          <button onClick={handleTakePhoto} style={{ padding:'9px 24px', background:'var(--blue)', color:'#fff', border:'none', borderRadius:VAR_R, fontSize:13, fontWeight:600, cursor:'pointer', width:'100%' }}>Take Photo</button>
+        </div>
+      ) : (
+        <div style={{ flex:1, padding:24, display:'flex', flexDirection:'column', gap:14 }}>
+          <div style={{ padding:'14px 16px', background:'var(--blue-light)', border:'1px solid var(--blue-mid)', borderRadius:VAR_R }}>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:8 }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" strokeWidth="2.5" strokeLinecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span style={{ fontSize:11, fontWeight:700, color:'var(--blue)', textTransform:'uppercase', letterSpacing:'0.06em' }}>Equipment Identified</span>
+            </div>
+            <div style={{ fontSize:15, fontWeight:700, marginBottom: identifiedEq?.description ? 8 : 0 }}>{identifiedEq?.name}</div>
+            {identifiedEq?.description && (
+              <div style={{ fontSize:13, color:'var(--text-secondary)', lineHeight:1.5 }}>{identifiedEq.description}</div>
+            )}
+          </div>
+          <a href="#" onClick={e=>e.preventDefault()} style={{ display:'flex', alignItems:'center', gap:10, padding:'11px 14px', background:'#fff', border:'1px solid var(--border)', borderRadius:VAR_R, textDecoration:'none', color:'var(--text-primary)', fontSize:13, fontWeight:500, boxShadow:'var(--shadow)' }}>
+            <I.FileText/>
+            <span>View Information Sheet</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" style={{ marginLeft:'auto', opacity:0.4 }}><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          <button onClick={handleRetry} style={{ padding:'7px 14px', background:'none', border:'1px solid var(--border)', borderRadius:VAR_R, fontSize:13, color:'var(--text-secondary)', cursor:'pointer' }}>Try Another Photo</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── MAIN CONTENT ─────────────────────────────────────── */
+function MainContent({ section, onSelectItem, selectedId, onNavigate, isMobile, onContactHospice }) {
+  const [eqSearch, setEqSearch] = useState('');
+  const eqFilter = (list) => eqSearch.trim()==='' ? list : list.filter(eq=>eq.name.toLowerCase().includes(eqSearch.toLowerCase()));
+  const pad = isMobile ? '16px 14px' : '24px 28px';
+
+  /* PATIENT */
+  if (section === 'patient') return (
+    <div style={{ padding:pad }}>
+      <div style={{ background:'#fff', borderRadius:var_r, boxShadow:'var(--shadow)', border:'1px solid var(--border)', overflow:'hidden' }}>
+        <div style={{ padding:'18px 20px', borderBottom:'1px solid var(--border)' }}>
+          <div style={{ fontSize:17, fontWeight:700, marginBottom:4 }}>{patient.name}</div>
+          <div style={{ display:'flex', alignItems:'center', gap:12, fontSize:12, color:'var(--text-secondary)', flexWrap:'wrap' }}>
+            <span>DOB: {patient.dob}</span><span>MR: {patient.mr}</span><Badge status={patient.status} />
+          </div>
+        </div>
+        <div style={{ padding:'4px 20px 12px' }}>
+          <DetailRow label="Address" value={<a href={`https://maps.google.com/?q=${encodeURIComponent(patient.address.replace(/\n/g,' '))}`} target="_blank" rel="noopener noreferrer" style={{ color:'var(--text-primary)', textDecoration:'none', whiteSpace:'pre-line' }}>{patient.address}</a>} />
+          <DetailRow label="Phone"     value={patient.phone} />
+          <DetailRow label="Hospice"   value={patient.hospice} onClick={()=>onNavigate('hospice')} />
+          <DetailRow label="Team"      value={patient.team} />
+          <DetailRow label="Caregiver" value={`${patient.caregiver}\n${patient.caregiverPhone}`} pre />
+        </div>
+      </div>
+    </div>
+  );
+
+  /* ORDERS */
+  if (section === 'orders') return (
+    <div style={{ padding:pad }}>
+      <div style={{ background:'#fff', borderRadius:var_r, boxShadow:'var(--shadow)', border:'1px solid var(--border)', overflow:'hidden' }}>
+        <div style={{ padding:'14px 20px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+          <div style={{ fontSize:15, fontWeight:700 }}>Orders</div>
+          <span style={{ background:'var(--blue-light)', color:'var(--blue)', borderRadius:99, padding:'2px 9px', fontSize:12, fontWeight:400 }}>{orders.length}</span>
+        </div>
+        {orders.map((o,i)=>(
+          <div key={o.id} onClick={()=>onSelectItem(o)}
+            style={{ display:'flex', alignItems:'center', gap:12, padding:'13px 20px', borderBottom:i<orders.length-1?'1px solid var(--border)':'none', cursor:'pointer', background:selectedId===o.id?'var(--blue-light)':'#fff', transition:'background 0.1s' }}>
+            {/* Clipboard icon */}
+            <div style={{ flexShrink:0 }}>
+              {o.type==='pickup' ? <I.ClipboardP size={34}/> : <I.ClipboardD size={34}/>}
+            </div>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ fontSize:13, fontWeight:600, marginBottom:3 }}>{o.id}</div>
+              <div style={{ fontSize:12, color:'var(--text-tertiary)' }}>{fmt(o.date)} &middot; {o.items.length} item{o.items.length!==1?'s':''}</div>
+            </div>
+            <div style={{ display:'flex', alignItems:'center', gap:10, flexShrink:0 }}>
+              <Badge status={o.status}/>
+              <span style={{ color:'var(--text-tertiary)' }}><I.Chevron/></span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  /* EQUIPMENT */
+  if (section === 'equipment') {
+    const sortedRentals = [...equipment.rentals].sort((a,b)=>new Date(b.deliveredOn)-new Date(a.deliveredOn));
+    const sortedOther   = [...equipment.other].sort((a,b)=>new Date(b.deliveredOn)-new Date(a.deliveredOn));
+    const sortedPrior   = [...equipment.priorRentals].sort((a,b)=>new Date(b.pickedUpOn)-new Date(a.pickedUpOn));
+    const fR = eqFilter(sortedRentals), fO = eqFilter(sortedOther), fP = eqFilter(sortedPrior);
+    return (
+      <div style={{ padding:pad }}>
+        <div style={{ background:'#fff', borderRadius:var_r, boxShadow:'var(--shadow)', border:'1px solid var(--border)', overflow:'hidden' }}>
+          <div style={{ padding:'14px 20px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <div style={{ fontSize:15, fontWeight:700 }}>Equipment</div>
+            <button onClick={()=>onSelectItem({type:'camera'})} style={{ display:'flex', alignItems:'center', gap:6, padding:'5px 11px', background:'var(--blue-light)', color:'var(--blue)', border:'none', borderRadius:var_r, fontSize:12, fontWeight:600, cursor:'pointer' }}>
+              <I.Camera/> Identify Equipment
+            </button>
+          </div>
+          <div style={{ padding:'12px 20px', borderBottom:'1px solid var(--border)' }}>
+            <div style={{ position:'relative' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ position:'absolute', left:10, top:'50%', transform:'translateY(-50%)', color:'var(--text-tertiary)', pointerEvents:'none' }}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" value={eqSearch} onChange={e=>setEqSearch(e.target.value)} placeholder="Search equipment…"
+                style={{ width:'100%', padding:'8px 10px 8px 32px', border:'1px solid var(--border)', borderRadius:var_r, fontSize:13, outline:'none', background:'var(--content-bg)' }}
+                onFocus={e=>e.target.style.borderColor='var(--blue)'}
+                onBlur={e=>e.target.style.borderColor='var(--border)'} />
+              {eqSearch && <button onClick={()=>setEqSearch('')} style={{ position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'var(--text-tertiary)', padding:2, display:'flex' }}><I.Close/></button>}
+            </div>
+          </div>
+
+          <div style={{ padding:'10px 20px 2px' }}><div style={{ fontSize:11, fontWeight:600, color:'var(--text-tertiary)', textTransform:'uppercase', letterSpacing:'0.06em' }}>Active Rentals</div></div>
+          {fR.map(eq=>(
+            <div key={eq.id} onClick={()=>onSelectItem(eq)} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'11px 20px', borderBottom:'1px solid var(--border)', cursor:'pointer', background:selectedId===eq.id?'var(--blue-light)':'#fff', transition:'background 0.1s' }}>
+              <div style={{ minWidth:0, marginRight:8 }}>
+                <div style={{ fontSize:13, fontWeight:400, marginBottom:3 }}>{eq.name}</div>
+                <div style={{ fontSize:12, color:'var(--text-tertiary)' }}>
+                  {eq.lotNum ? `Lot #: ${eq.lotNum}` : [eq.asset && `Asset #: ${eq.asset}`, eq.serial && `S/N: ${eq.serial}`].filter(Boolean).join(', ')}
+                </div>
+              </div>
+              <div style={{ display:'flex', alignItems:'center', gap:10, flexShrink:0 }}>
+                <div style={{ textAlign:'right' }}>
+                  <div style={{ fontSize:11, color:'var(--text-tertiary)', marginBottom:2 }}>Delivered</div>
+                  <div style={{ fontSize:12, color:'var(--text-secondary)' }}>{eq.orderNums&&eq.orderNums.length>1 ? 'Multiple Orders' : fmt(eq.deliveredOn)}</div>
+                </div>
+                <span style={{ color:'var(--text-tertiary)' }}><I.Chevron/></span>
+              </div>
+            </div>
+          ))}
+
+          <div style={{ padding:'12px 20px 2px', borderTop:'1px solid var(--border)' }}><div style={{ fontSize:11, fontWeight:600, color:'var(--text-tertiary)', textTransform:'uppercase', letterSpacing:'0.06em' }}>Other Equipment</div></div>
+          {fO.map(eq=>(
+            <div key={eq.id} onClick={()=>onSelectItem(eq)} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'11px 20px', borderBottom:'1px solid var(--border)', cursor:'pointer', background:selectedId===eq.id?'var(--blue-light)':'#fff', transition:'background 0.1s' }}>
+              <div style={{ fontSize:13, fontWeight:400, minWidth:0, marginRight:8 }}>{eq.name}</div>
+              <div style={{ display:'flex', alignItems:'center', gap:10, flexShrink:0 }}>
+                <div style={{ textAlign:'right' }}>
+                  <div style={{ fontSize:11, color:'var(--text-tertiary)', marginBottom:2 }}>Delivered</div>
+                  <div style={{ fontSize:12, color:'var(--text-secondary)' }}>{eq.orderNums&&eq.orderNums.length>1 ? 'Multiple Orders' : fmt(eq.deliveredOn)}</div>
+                </div>
+                <span style={{ color:'var(--text-tertiary)' }}><I.Chevron/></span>
+              </div>
+            </div>
+          ))}
+
+          <div style={{ padding:'12px 20px 2px', borderTop:'1px solid var(--border)' }}><div style={{ fontSize:11, fontWeight:600, color:'var(--text-tertiary)', textTransform:'uppercase', letterSpacing:'0.06em' }}>Prior Rentals</div></div>
+          {fP.map((eq,i)=>(
+            <div key={eq.id} onClick={()=>onSelectItem(eq)} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'11px 20px', borderBottom:i<fP.length-1?'1px solid var(--border)':'none', cursor:'pointer', background:selectedId===eq.id?'var(--blue-light)':'#fff', transition:'background 0.1s', opacity:0.85 }}>
+              <div style={{ fontSize:13, fontWeight:400, minWidth:0, marginRight:8 }}>{eq.name}</div>
+              <div style={{ display:'flex', alignItems:'center', gap:isMobile?8:16, flexShrink:0 }}>
+                {!isMobile && (
+                  <div style={{ textAlign:'right' }}>
+                    <div style={{ fontSize:11, color:'var(--text-tertiary)', marginBottom:2 }}>Delivered</div>
+                    <div style={{ fontSize:12, color:'var(--text-secondary)' }}>{fmt(eq.deliveredOn)}</div>
+                  </div>
+                )}
+                <div style={{ textAlign:'right' }}>
+                  <div style={{ fontSize:11, color:'var(--text-tertiary)', marginBottom:2 }}>Picked Up</div>
+                  <div style={{ fontSize:12, color:'var(--text-secondary)' }}>{fmt(eq.pickedUpOn)}</div>
+                </div>
+                <span style={{ color:'var(--text-tertiary)' }}><I.Chevron/></span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  /* HOSPICE */
+  if (section === 'hospice') return (
+    <div style={{ padding:pad }}>
+      <div style={{ background:'#fff', borderRadius:var_r, border:'1px solid var(--border)', boxShadow:'var(--shadow)', overflow:'hidden' }}>
+        <div style={{ padding:'14px 20px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+          <div style={{ fontSize:15, fontWeight:700 }}>{hospice.name}</div>
+          <button
+            onClick={onContactHospice}
+            style={{ display:'flex', alignItems:'center', gap:6, padding:'6px 13px', background:'var(--blue-light)', color:'var(--blue)', border:'none', borderRadius:var_r, fontSize:12, fontWeight:600, cursor:'pointer', flexShrink:0 }}
+          >
+            <I.Phone/> Contact Hospice
+          </button>
+        </div>
+        <div style={{ padding:'4px 20px 12px' }}>
+          <DetailRow label="Phone"       value={hospice.mainPhone} />
+          <DetailRow label="After-Hours" value={hospice.afterHours} />
+          <DetailRow label="Address" value={<a href={`https://maps.google.com/?q=${encodeURIComponent(hospice.address.replace(/\n/g,' '))}`} target="_blank" rel="noopener noreferrer" style={{ color:'var(--text-primary)', textDecoration:'none', whiteSpace:'pre-line' }}>{hospice.address}</a>} />
+        </div>
+      </div>
+    </div>
+  );
+
+  return null;
+}
+
+/* ── LOGIN PAGE ───────────────────────────────────────── */
+function LoginPage({ onLogin }) {
+  const [firstName, setFirstName] = useState('');
+  const [dob, setDob] = useState('');
+  const [error, setError] = useState('');
+  const [shake, setShake] = useState(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const dobNorm = dob.replace(/\s/g,'');
+    if (firstName.trim().toLowerCase()==='adam' && (dobNorm==='1/1/2000'||dobNorm==='01/01/2000')) {
+      onLogin();
+    } else {
+      setError(`We were unable to sign in. Please contact your hospice at ${hospice.mainPhone}`);
+      setShake(true); setTimeout(()=>setShake(false), 600);
+    }
+  };
+  return (
+    <div style={{ height:'100vh', background:'var(--content-bg)', display:'flex', alignItems:'center', justifyContent:'center', padding:'0 20px' }}>
+      <div style={{ width:'100%', maxWidth:420 }}>
+        <div style={{ display:'flex', justifyContent:'center', marginBottom:32 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+            <svg width="36" height="36" viewBox="0 0 26 26" fill="none"><circle cx="9" cy="13" r="7" fill="#ff7a45" opacity="0.9"/><circle cx="17" cy="13" r="7" fill="#4f90f0" opacity="0.9"/></svg>
+            <span style={{ fontSize:26, fontWeight:700, color:'var(--text-primary)', letterSpacing:'-0.01em' }}>resolve</span>
+          </div>
+        </div>
+        <div style={{ background:'#fff', borderRadius:12, border:'1px solid var(--border)', boxShadow:'var(--shadow-md)', padding:'32px 32px 28px', animation:shake?'shake 0.5s ease':'none' }}>
+          <div style={{ marginBottom:24 }}>
+            <div style={{ fontSize:20, fontWeight:700, marginBottom:6 }}>Patient Portal</div>
+            <div style={{ fontSize:14, color:'var(--text-secondary)' }}>Please verify your identity to continue.</div>
+          </div>
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom:16 }}>
+              <label style={{ display:'block', fontSize:12, fontWeight:600, color:'var(--text-secondary)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:6 }}>First Name</label>
+              <input type="text" value={firstName} onChange={e=>{setFirstName(e.target.value);setError('');}} placeholder="Enter your first name" required
+                style={{ width:'100%', padding:'10px 12px', border:'1px solid var(--border)', borderRadius:VAR_R, fontSize:14, outline:'none' }}
+                onFocus={e=>e.target.style.borderColor='var(--blue)'} onBlur={e=>e.target.style.borderColor='var(--border)'} />
+            </div>
+            <div style={{ marginBottom:24 }}>
+              <label style={{ display:'block', fontSize:12, fontWeight:600, color:'var(--text-secondary)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:6 }}>Date of Birth</label>
+              <input type="text" value={dob} onChange={e=>{setDob(e.target.value);setError('');}} placeholder="M/D/YYYY" required
+                style={{ width:'100%', padding:'10px 12px', border:'1px solid var(--border)', borderRadius:VAR_R, fontSize:14, outline:'none' }}
+                onFocus={e=>e.target.style.borderColor='var(--blue)'} onBlur={e=>e.target.style.borderColor='var(--border)'} />
+            </div>
+            {error && (
+              <div style={{ marginBottom:16, padding:'10px 14px', background:'#fef2f2', border:'1px solid #fecaca', borderRadius:VAR_R, fontSize:13, color:'#b91c1c', lineHeight:1.5 }}>
+                {withPhoneLinks(error)}
+              </div>
+            )}
+            <button type="submit" style={{ width:'100%', padding:'11px', background:'var(--blue)', color:'#fff', border:'none', borderRadius:VAR_R, fontSize:14, fontWeight:600, cursor:'pointer' }}>Sign In</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── USER MENU ────────────────────────────────────────── */
+function UserMenu({ name, onSignOut, light }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ position:'relative' }}>
+      <button onClick={()=>setOpen(o=>!o)}
+        style={{ background:'none', border:'none', cursor:'pointer', color:light?'rgba(255,255,255,0.8)':'var(--text-secondary)', padding:'4px 6px', borderRadius:6, display:'flex', alignItems:'center', gap:6 }}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+      </button>
+      {open && (
+        <>
+          <div onClick={()=>setOpen(false)} style={{ position:'fixed', inset:0, zIndex:10 }}/>
+          <div style={{ position:'absolute', right:0, top:'calc(100% + 6px)', background:'#fff', border:'1px solid var(--border)', borderRadius:VAR_R, boxShadow:'var(--shadow-md)', minWidth:180, zIndex:20, overflow:'hidden' }}>
+            <div style={{ padding:'12px 14px', borderBottom:'1px solid var(--border)' }}>
+              <div style={{ fontSize:13, fontWeight:600 }}>{name}</div>
+              <div style={{ fontSize:11, color:'var(--text-tertiary)' }}>Patient</div>
+            </div>
+            <button onClick={onSignOut} style={{ display:'flex', alignItems:'center', gap:8, width:'100%', padding:'10px 14px', background:'none', border:'none', cursor:'pointer', fontSize:13, color:'var(--text-secondary)', textAlign:'left' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Sign Out
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ── APP ───────────────────────────────────────────────── */
+function App() {
+  const [loggedIn, setLoggedIn]                   = useState(false);
+  const [userName, setUserName]                   = useState('');
+  const [section, setSection]                     = useState('patient');
+  const [selected, setSelected]                   = useState(null);
+  const [isMobile, setIsMobile]                   = useState(window.innerWidth <= 767);
+  const [showContact, setShowContact]             = useState(false);
+  const [surveyBannerDismissed, setSurveyBannerDismissed] = useState(false);
+  const [openOnSurveyId, setOpenOnSurveyId]       = useState(null);
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 767);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const nav = [
+    { id:'patient',   label:'Patient',   icon:(size)=><I.Patient   size={size}/> },
+    { id:'hospice',   label:'Hospice',   icon:(size)=><I.Hospice   size={size}/> },
+    { id:'orders',    label:'Orders',    icon:(size)=><I.Orders    size={size}/> },
+    { id:'equipment', label:'Equipment', icon:(size)=><I.Equipment size={size}/> },
+  ];
+
+  const handleLogin   = () => { setUserName(`${patient.firstName} ${patient.lastName}`); setLoggedIn(true); };
+  const handleSignOut = () => { setLoggedIn(false); setUserName(''); setSection('patient'); setSelected(null); };
+  const handleSection = (id) => { setSection(id); setSelected(null); };
+  const handleSelect  = (item) => { setOpenOnSurveyId(null); setSelected(item); };
+  const handleClose   = () => setSelected(null);
+  const handleSurveyBannerClick = () => {
+    const so = orders.find(o => o.id === SURVEY_ORDER_ID);
+    if (!so) return;
+    setOpenOnSurveyId(SURVEY_ORDER_ID);
+    setSection('orders');
+    setSelected(so);
+  };
+
+  if (!loggedIn) return <LoginPage onLogin={handleLogin} />;
+
+  const breadcrumb = nav.find(n=>n.id===section)?.label || '';
+  const showPanel  = !!selected;
+
+  const panelContent = () => {
+    if (!selected) return null;
+    if (selected.type === 'camera') return <CameraPanel onClose={handleClose} />;
+    if (section === 'patient')   return <PatientPanel onClose={handleClose} />;
+    if (section === 'orders')    return <OrderPanel key={selected.id} order={selected} onClose={handleClose} initialTab={selected.id === openOnSurveyId ? 'survey' : 'detail'} onSurveySubmit={() => setSurveyBannerDismissed(true)} />;
+    if (section === 'equipment') return (
+      <EquipmentPanel eq={selected} onClose={handleClose} />
+    );
+    return null;
+  };
+
+  const mainContent = (
+    <MainContent
+      section={section}
+      onSelectItem={handleSelect}
+      selectedId={selected?.id}
+      onNavigate={handleSection}
+      isMobile={isMobile}
+      onContactHospice={() => setShowContact(true)}
+    />
+  );
+
+  const surveyOrder = orders.find(o => o.id === SURVEY_ORDER_ID);
+  const surveyBanner = !surveyBannerDismissed && surveyOrder ? (
+    <div style={{ background:'#fffbeb', borderBottom:'1px solid #fde68a', padding:'9px 16px', display:'flex', alignItems:'center', gap:10, flexShrink:0 }}>
+      <I.ClipboardSurvey/>
+      <span style={{ flex:1, fontSize:13, color:'#78350f', lineHeight:1.4 }}>
+        You have a service survey available from your delivery on <strong>{fmt(surveyOrder.fulfillOn)}</strong>.
+      </span>
+      <button onClick={handleSurveyBannerClick}
+        style={{ padding:'5px 12px', background:'#f59e0b', color:'#fff', border:'none', borderRadius:6, fontSize:12, fontWeight:600, cursor:'pointer', flexShrink:0, whiteSpace:'nowrap' }}>
+        Take Survey
+      </button>
+      <button onClick={() => setSurveyBannerDismissed(true)}
+        style={{ background:'none', border:'none', cursor:'pointer', color:'#92400e', fontSize:12, fontWeight:500, padding:'4px 2px', flexShrink:0 }}>
+        Dismiss
+      </button>
+    </div>
+  ) : null;
+
+  /* ── MOBILE ── */
+  if (isMobile) return (
+    <div style={{ display:'flex', flexDirection:'column', height:'100vh', overflow:'hidden', background:'var(--content-bg)' }}>
+      <div style={{ background:'var(--sidebar-top)', padding:'11px 16px', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
+        <ResolveLogo/>
+        <UserMenu name={userName} onSignOut={handleSignOut} light />
+      </div>
+      <div style={{ padding:'10px 16px', flexShrink:0, display:'flex', alignItems:'center', gap:7 }}>
+        <span style={{ fontSize:12, fontWeight:500, color:'var(--text-tertiary)' }}>Patient Portal</span>
+        <span style={{ color:'var(--text-tertiary)', fontSize:12 }}>&bull;</span>
+        <span style={{ fontSize:12, fontWeight:700 }}>{breadcrumb}</span>
+      </div>
+      {surveyBanner}
+      <div style={{ flex:1, overflow:'auto', paddingBottom:'var(--tab-bar-h)' }}>{mainContent}</div>
+      <div style={{ position:'fixed', bottom:0, left:0, right:0, height:'var(--tab-bar-h)', background:'#fff', borderTop:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-around', zIndex:50, boxShadow:'0 -2px 10px rgba(30,34,53,0.07)' }}>
+        {nav.map(n=>(
+          <button key={n.id} onClick={()=>handleSection(n.id)} style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:4, flex:1, height:'100%', background:'none', border:'none', cursor:'pointer', color:section===n.id?'var(--blue)':'var(--text-tertiary)', padding:'0 4px' }}>
+            {n.icon(section===n.id?22:20)}
+            <span style={{ fontSize:10, fontWeight:section===n.id?700:400 }}>{n.label}</span>
+          </button>
+        ))}
+      </div>
+      {showPanel && (
+        <div style={{ position:'fixed', inset:0, zIndex:100, background:'#fff', display:'flex', flexDirection:'column', animation:'slideUp 0.22s ease' }}>
+          <div style={{ background:'var(--sidebar-top)', padding:'11px 14px', display:'flex', alignItems:'center', gap:8, flexShrink:0 }}>
+            <button onClick={handleClose} style={{ display:'flex', alignItems:'center', gap:5, background:'none', border:'none', cursor:'pointer', color:'rgba(255,255,255,0.9)', fontSize:14, fontWeight:500 }}>
+              <I.ChevronLeft/> Back
+            </button>
+          </div>
+          <div style={{ flex:1, overflow:'hidden', display:'flex', flexDirection:'column' }}>{panelContent()}</div>
+        </div>
+      )}
+      {showContact && <ContactHospiceModal onClose={() => setShowContact(false)} />}
+    </div>
+  );
+
+  /* ── DESKTOP ── */
+  return (
+    <div style={{ display:'flex', height:'100vh', overflow:'hidden' }}>
+      {/* Sidebar */}
+      <div style={{ width:220, display:'flex', flexDirection:'column', flexShrink:0 }}>
+        <div style={{ background:'var(--sidebar-top)', padding:'15px 16px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+          <ResolveLogo/>
+          <button style={{ background:'none', border:'none', cursor:'pointer', color:'rgba(255,255,255,0.5)', padding:4 }}><I.Menu/></button>
+        </div>
+        <div style={{ flex:1, background:'var(--sidebar-blue)', padding:'16px 10px', display:'flex', flexDirection:'column' }}>
+          <div style={{ fontSize:15, fontWeight:700, color:'#fff', padding:'4px 8px 14px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            Patient Portal <I.ChevronDown/>
+          </div>
+          {nav.map(n=>(
+            <button key={n.id} onClick={()=>handleSection(n.id)} style={{ display:'flex', alignItems:'center', gap:10, width:'100%', padding:'10px 10px', marginBottom:2, border:'none', borderRadius:6, cursor:'pointer', background:section===n.id?'var(--nav-active-bg)':'transparent', color:'#fff', fontSize:14, fontWeight:section===n.id?600:400, textAlign:'left', transition:'background 0.1s' }}>
+              <span style={{ opacity:section===n.id?1:0.7 }}>{n.icon(16)}</span>
+              <span style={{ opacity:section===n.id?1:0.85 }}>{n.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      {/* Center */}
+      <div style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden', background:'var(--content-bg)' }}>
+        <div style={{ padding:'11px 20px', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:7 }}>
+            <span style={{ fontSize:13, fontWeight:500, color:'var(--text-tertiary)' }}>Patient Portal</span>
+            <span style={{ color:'var(--text-tertiary)', fontSize:13 }}>&bull;</span>
+            <span style={{ fontSize:13, fontWeight:700 }}>{breadcrumb}</span>
+          </div>
+          <UserMenu name={userName} onSignOut={handleSignOut} />
+        </div>
+        {surveyBanner}
+        <div style={{ flex:1, overflow:'auto', borderRight:'1px solid var(--border)' }}>{mainContent}</div>
+      </div>
+      {/* Right panel */}
+      {showPanel && (
+        <div style={{ width:340, flexShrink:0, background:'#fff', borderLeft:'1px solid var(--border)', overflow:'hidden', display:'flex', flexDirection:'column', boxShadow:'-2px 0 8px rgba(30,34,53,0.06)' }}>
+          {panelContent()}
+        </div>
+      )}
+      {/* Contact modal (portal-level so it overlays everything) */}
+      {showContact && <ContactHospiceModal onClose={() => setShowContact(false)} />}
+    </div>
+  );
+}
+
+ReactDOM.render(<App/>, document.getElementById('root'));
+</script>
+</body>
+</html>
