@@ -12,46 +12,70 @@
       font-size: 16px;
       line-height: 1.7;
       color: #222;
-      background: #fff;
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 48px 32px 80px;
+      background: #f9f9f9;
     }
 
     header {
-      text-align: center;
-      margin-bottom: 48px;
-      padding-bottom: 32px;
-      border-bottom: 2px solid #eee;
+      background: linear-gradient(135deg, #FF9F0A 0%, #FF7F50 100%);
+      color: white;
+      padding: 30px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 25px;
+    }
+
+    .header-icon {
+      flex-shrink: 0;
+    }
+
+    .header-icon img {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .header-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     header h1 {
-      font-size: 2.4rem;
-      font-weight: 700;
-      color: #1a1a2e;
-      letter-spacing: -0.5px;
-      margin-bottom: 6px;
+      font-size: 2.2em;
+      margin: 0;
+      margin-bottom: 5px;
+      line-height: 1.1;
     }
 
     header .app-name {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #555;
-      margin-bottom: 10px;
+      font-size: 0.95em;
+      margin: 0;
+      opacity: 0.95;
+      line-height: 1.3;
     }
 
     header .effective-date {
-      font-size: 0.9rem;
-      color: #888;
-      font-style: italic;
+      font-size: 0.85em;
+      margin: 5px 0 0 0;
+      opacity: 0.85;
+    }
+
+    .content-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
     }
 
     h2 {
       font-size: 1.25rem;
       font-weight: 700;
-      color: #1a1a2e;
+      color: #FF9F0A;
       margin-top: 40px;
       margin-bottom: 12px;
+      border-bottom: 2px solid #FF9F0A;
+      padding-bottom: 10px;
     }
 
     h3 {
@@ -109,8 +133,27 @@
     }
 
     @media (max-width: 600px) {
-      body { padding: 28px 18px 60px; }
-      header h1 { font-size: 1.8rem; }
+      header {
+        flex-direction: column;
+        gap: 20px;
+        padding: 25px 15px;
+      }
+
+      .header-icon img {
+        width: 64px;
+        height: 64px;
+      }
+
+      header h1 {
+        font-size: 1.8em;
+      }
+
+      header .app-name,
+      header .effective-date {
+        font-size: 0.9em;
+      }
+
+      .content-wrapper { padding: 25px 15px 60px; }
     }
 
     @media print {
@@ -121,12 +164,18 @@
 <body>
 
   <header>
-    <h1>Privacy Policy</h1>
-    <div class="app-name">Slice by OrangeMac</div>
-    <div class="effective-date">Effective Date: March 27, 2025</div>
+    <div class="header-icon">
+      <img src="Slice-AppIcon.png" alt="Slice App Icon">
+    </div>
+    <div class="header-content">
+      <h1>Privacy Policy</h1>
+      <div class="app-name">Slice by OrangeMac</div>
+      <div class="effective-date">Effective Date: March 27, 2025</div>
+    </div>
   </header>
 
-  <p>OrangeMac LLC ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our iOS application Slice (the "App"). Please read this policy carefully. By using the App, you agree to the terms described below.</p>
+  <div class="content-wrapper">
+    <p>OrangeMac LLC ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our iOS application Slice (the "App"). Please read this policy carefully. By using the App, you agree to the terms described below.</p>
   <p>If you do not agree with the terms of this Privacy Policy, please do not use the App.</p>
 
   <h2>1. Information We Collect</h2>
@@ -211,6 +260,7 @@
   <footer>
     This Privacy Policy was last updated on March 27, 2025 and applies to the Slice iOS application published by OrangeMac LLC, incorporated in South Carolina.
   </footer>
+  </div>
 
 </body>
 </html>

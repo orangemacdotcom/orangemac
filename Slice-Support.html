@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slice - Support & Help</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f9f9f9;
+        }
+
+        header {
+            background: linear-gradient(135deg, #FF9F0A 0%, #FF7F50 100%);
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .header-icon {
+            flex-shrink: 0;
+        }
+
+        .header-icon img {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header-content h1 {
+            font-size: 2.2em;
+            margin: 0;
+            margin-bottom: 5px;
+            line-height: 1.1;
+        }
+
+        .header-content p {
+            margin: 0;
+            font-size: 1em;
+            opacity: 0.95;
+            line-height: 1.3;
+        }
+
+        .header-content p.subtitle {
+            font-size: 0.85em;
+            margin-top: 5px;
+            opacity: 0.85;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tabs button {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs button.active {
+            background: #FF9F0A;
+            color: white;
+            border-color: #FF9F0A;
+        }
+
+        .nav-tabs button:hover {
+            border-color: #FF9F0A;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #FF9F0A;
+            border-bottom: 2px solid #FF9F0A;
+            padding-bottom: 10px;
+        }
+
+        .faq-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .faq-item h3 {
+            color: #FF9F0A;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-item h3:hover {
+            color: #FF7F50;
+        }
+
+        .faq-item p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 4px solid #FF9F0A;
+        }
+
+        .feature-card h3 {
+            color: #FF9F0A;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .tip {
+            background: #FFF3E0;
+            border-left: 4px solid #FF9F0A;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .tip strong {
+            color: #FF9F0A;
+        }
+
+        .icon {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 25px 15px;
+            }
+
+            .header-icon img {
+                width: 64px;
+                height: 64px;
+            }
+
+            .header-content h1 {
+                font-size: 1.8em;
+            }
+
+            .header-content p {
+                font-size: 0.9em;
+            }
+
+            .header-content p.subtitle {
+                font-size: 0.8em;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-tabs button {
+                width: 100%;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header style:"text-align:center">
+        <div class="header-icon">
+            <img src="Slice-AppIcon.png" alt="Slice App Icon">
+        </div>
+        <div class="header-content">
+            <h1>Slice Support</h1>
+            <p>Your guide to reading smarter with Slice RSS Reader</p>
+            <p class="subtitle">Powered by OrangeMac</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="nav-tabs">
+            <button class="active" onclick="showSection('getting-started')">Getting Started</button>
+            <button onclick="showSection('features')">Features</button>
+            <button onclick="showSection('podcasts')">Podcasts</button>
+            <button onclick="showSection('settings')">Settings</button>
+            <button onclick="showSection('faq')">FAQ</button>
+            <button onclick="showSection('troubleshooting')">Troubleshooting</button>
+        </div>
+
+        <!-- Getting Started Section -->
+        <div id="getting-started" class="section active">
+            <h2>🚀 Getting Started with Slice</h2>
+
+            <div class="faq-item">
+                <h3>Adding Your First Feed</h3>
+                <p>To start reading, you need to add an RSS feed:</p>
+                <ol style="margin-left: 20px; color: #666;">
+                    <li>Tap the <strong>+</strong> button in the top-right corner</li>
+                    <li>Paste your feed URL (e.g., <code>https://example.com/feed</code>)</li>
+                    <li>Tap <strong>Subscribe</strong></li>
+                    <li>Your feed articles will appear immediately</li>
+                </ol>
+                <div class="tip">
+                    <strong>💡 Tip:</strong> Most websites have an RSS feed link in their footer. Look for an RSS icon or link labeled "Subscribe."
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3>Finding Feeds to Subscribe To</h3>
+                <p>Use the <strong>Discover</strong> tab to explore popular feeds organized by category. Tap any feed to preview articles, then subscribe with one tap.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Managing Your Feeds</h3>
+                <p>In the <strong>Feeds</strong> tab, you can:</p>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li>Drag to reorder feeds</li>
+                    <li>Swipe left to save articles</li>
+                    <li>Swipe right to mark as read</li>
+                    <li>Long-press for more options</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div id="features" class="section">
+            <h2>✨ Key Features</h2>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3><span class="icon">📁</span>Categories</h3>
+                    <p>Organize your feeds into custom categories to keep your reading organized and easy to browse.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="icon">⭐</span>Favorites</h3>
+                    <p>Star your favorite feeds for quick access. They appear in a dedicated Favorites tab.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="icon">🔖</span>Save Articles</h3>
+                    <p>Bookmark articles to read later. Access all saved articles from the Saved tab.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="icon">🔍</span>Search</h3>
+                    <p>Search across all your articles by title, content, author, or feed name.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="icon">🎨</span>Themes</h3>
+                    <p>Choose between Light, Dark, or System theme. Pick your accent color from presets or customize.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="icon">📱</span>Alternate Icons</h3>
+                    <p>Change your app icon from Settings. Choose between Original and Dark variants.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Podcasts Section -->
+        <div id="podcasts" class="section">
+            <h2>🎙️ Podcast Features</h2>
+
+            <div class="faq-item">
+                <h3>Playing Podcasts</h3>
+                <p>When you subscribe to a podcast feed, episodes appear in your feed list. Tap an episode to play it:</p>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li>Playback continues in the mini-player while you browse</li>
+                    <li>Tap the mini-player to expand to full player view</li>
+                    <li>Use lock screen controls to pause, skip, and adjust speed</li>
+                </ul>
+            </div>
+
+            <div class="faq-item">
+                <h3>Playback Controls</h3>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li><strong>Play/Pause:</strong> Main button in the center</li>
+                    <li><strong>Skip Back 15s:</strong> Left skip button</li>
+                    <li><strong>Skip Forward 30s:</strong> Right skip button</li>
+                    <li><strong>Speed Control:</strong> Tap speed indicator (1×, 1.5×, 2×, etc.)</li>
+                </ul>
+            </div>
+
+            <div class="faq-item">
+                <h3>Smart Squeeze</h3>
+                <p>Smart Squeeze automatically detects and speeds up silent pauses in podcasts, letting you listen faster without missing content.</p>
+                <p>Toggle it on/off in <strong>Settings → Features → Smart Squeeze</strong></p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Auto-Resume</h3>
+                <p>Slice remembers where you left off in each podcast episode. When you return to an episode, it automatically resumes from the last position.</p>
+            </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settings" class="section">
+            <h2>⚙️ Settings & Preferences</h2>
+
+            <div class="faq-item">
+                <h3>Features Section</h3>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li><strong>Smart Stitch:</strong> Reads full articles beyond RSS summaries</li>
+                    <li><strong>Privacy Minder:</strong> Removes HTML embeds, videos, and tracking</li>
+                    <li><strong>Smart Squeeze:</strong> Speeds up podcast silences</li>
+                    <li><strong>Infinity Reading:</strong> Automatically load the next article</li>
+                </ul>
+            </div>
+
+            <div class="faq-item">
+                <h3>Reading Preferences</h3>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li><strong>Font Size:</strong> Adjust text size for comfortable reading</li>
+                    <li><strong>Article Images:</strong> Toggle images in articles</li>
+                    <li><strong>Compact Mode:</strong> Reduce spacing for more articles per screen</li>
+                    <li><strong>Mark as Read on Open:</strong> Auto-mark articles when viewed</li>
+                </ul>
+            </div>
+
+            <div class="faq-item">
+                <h3>Item Types</h3>
+                <p>Toggle which content types to show:</p>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li><strong>Show Articles:</strong> Display text articles from feeds</li>
+                    <li><strong>Show Podcasts:</strong> Display podcast episodes from feeds</li>
+                </ul>
+                <p>You can hide podcasts to see only articles, or vice versa.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Keyword Filters</h3>
+                <p>Hide articles containing specific words or phrases. Add filters in Settings → Reading → Keyword Filters.</p>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div id="faq" class="section">
+            <h2>❓ Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <h3>How often does Slice refresh feeds?</h3>
+                <p>By default, Slice uses iOS background refresh to periodically update your feeds. The frequency depends on your usage patterns and iOS settings. You can manually refresh any time by pulling down on the feed list.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Can I import my feeds from another reader?</h3>
+                <p>Yes! If you have an OPML file from another RSS reader:</p>
+                <ol style="margin-left: 20px; color: #666;">
+                    <li>Go to <strong>Settings → Data & Storage → Import OPML</strong></li>
+                    <li>Select your OPML file</li>
+                    <li>Slice will import all feeds and subscriptions</li>
+                </ol>
+            </div>
+
+            <div class="faq-item">
+                <h3>How do I export my feeds?</h3>
+                <p>To back up your feeds or move to another reader:</p>
+                <ol style="margin-left: 20px; color: #666;">
+                    <li>Go to <strong>Settings → Data & Storage → Export OPML</strong></li>
+                    <li>Select where to save the file</li>
+                    <li>Share or save your OPML file</li>
+                </ol>
+            </div>
+
+            <div class="faq-item">
+                <h3>What's the difference between read and unread?</h3>
+                <p>Articles are <strong>unread</strong> by default. Once you open an article (if "Mark as Read on Open" is enabled) or manually mark it as read, it becomes <strong>read</strong>. Read articles appear grayed out and don't count toward your unread badge.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>How do I clear cached data?</h3>
+                <p>In <strong>Settings → Data & Storage</strong>, you can:</p>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li>View how much space each feed uses</li>
+                    <li>Swipe on a feed to clear its cached articles</li>
+                    <li>Clear all saved articles</li>
+                </ul>
+            </div>
+
+            <div class="faq-item">
+                <h3>Can I read offline?</h3>
+                <p>Slice caches articles locally, so you can read previously downloaded articles offline. New articles require an internet connection to download.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Does Slice support audio in the background?</h3>
+                <p>Yes! Podcasts will continue playing when you lock your phone or switch apps. Use lock screen controls or the mini-player to pause/play.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>How do I report a bug or request a feature?</h3>
+                <p>We'd love to hear from you! Contact us with detailed information about the issue or feature you'd like to see.</p>
+            </div>
+        </div>
+
+        <!-- Troubleshooting Section -->
+        <div id="troubleshooting" class="section">
+            <h2>🔧 Troubleshooting</h2>
+
+            <div class="faq-item">
+                <h3>Feeds not updating</h3>
+                <p><strong>Solution:</strong></p>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li>Check your internet connection</li>
+                    <li>Manually refresh by pulling down on the feed list</li>
+                    <li>Try removing and re-adding the feed if the URL changed</li>
+                    <li>Check if the feed is muted (settings icon on the feed)</li>
+                </ul>
+            </div>
+
+            <div class="faq-item">
+                <h3>Articles showing old content</h3>
+                <p><strong>Solution:</strong> The article may not have full content in the RSS feed. Try:</p>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li>Enable <strong>Smart Stitch</strong> in Settings to fetch full articles</li>
+                    <li>Tap "Open in Browser" to read the full article on the website</li>
+                </ul>
+            </div>
+
+            <div class="faq-item">
+                <h3>Podcast not playing</h3>
+                <p><strong>Solution:</strong></p>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li>Check internet connection (for streaming)</li>
+                    <li>Ensure volume is not muted</li>
+                    <li>Try closing and reopening the app</li>
+                    <li>Check that the feed is actually a podcast with audio enclosures</li>
+                </ul>
+            </div>
+
+            <div class="faq-item">
+                <h3>App using too much storage</h3>
+                <p><strong>Solution:</strong></p>
+                <ol style="margin-left: 20px; color: #666;">
+                    <li>Go to <strong>Settings → Data & Storage</strong></li>
+                    <li>See which feeds use the most space</li>
+                    <li>Clear caches for large feeds</li>
+                    <li>Reduce the article limit to keep fewer articles cached</li>
+                </ol>
+            </div>
+
+            <div class="faq-item">
+                <h3>Search not finding articles</h3>
+                <p><strong>Solution:</strong> Search only works on articles you've already downloaded. Try:</p>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li>Increase the article limit in Settings</li>
+                    <li>Manually refresh feeds to download more recent articles</li>
+                    <li>Make sure articles are not filtered (unread-only mode)</li>
+                </ul>
+            </div>
+
+            <div class="faq-item">
+                <h3>Still having issues?</h3>
+                <p>If you're experiencing problems not listed here:</p>
+                <ol style="margin-left: 20px; color: #666;">
+                    <li>Try force-closing and reopening the app</li>
+                    <li>Check that you're running the latest version</li>
+                    <li>Clear app cache if possible</li>
+                    <li>Contact support with details about your issue</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Slice RSS Reader. All rights reserved.</p>
+        <p>Made with ❤️ for RSS enthusiasts</p>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.nav-tabs button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
