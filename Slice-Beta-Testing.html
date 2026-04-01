@@ -286,6 +286,95 @@
             border-radius: 4px;
         }
 
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tabs button {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs button.active {
+            background: #FF9F0A;
+            color: white;
+            border-color: #FF9F0A;
+        }
+
+        .nav-tabs button:hover {
+            border-color: #FF9F0A;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .license-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .license-section h2 {
+            color: #FF9F0A;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            border-bottom: 2px solid #FF9F0A;
+            padding-bottom: 10px;
+        }
+
+        .license-section h2:first-child {
+            margin-top: 0;
+        }
+
+        .license-section h3 {
+            color: #333;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .license-section p {
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .license-section ul,
+        .license-section ol {
+            margin: 15px 0 15px 30px;
+            color: #333;
+        }
+
+        .license-section li {
+            margin-bottom: 8px;
+        }
+
+        .legal-notice {
+            background: #FFF9E6;
+            border-left: 5px solid #FF9F0A;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 6px;
+        }
+
+        .legal-notice strong {
+            color: #FF7F50;
+        }
+
         footer {
             background: #333;
             color: white;
@@ -349,11 +438,24 @@
     <div class="container">
         <div class="intro-section">
             <h2>Welcome, Beta Tester! 🎉</h2>
-            <p>Thank you for helping us test Slice News Reader. Your feedback is invaluable in making Slice the best news reader on iOS. Below is a comprehensive list of features and areas we need you to test.</p>
-            <p><strong>How to report issues:</strong> Found a bug? Use the feedback form at the bottom of this page or email us at <a href="mailto:feedback@orangemac.com">feedback@orangemac.com</a> with details about what you found.</p>
+            <p>Thank you for helping us test Slice News Reader. Your feedback is invaluable in making Slice the best news reader on iOS.</p>
+
+            <div style="background: #E5F2FF; border-left: 5px solid #FF9F0A; padding: 15px; margin: 20px 0; border-radius: 6px;">
+                <p style="margin: 0 0 10px 0;"><strong>📲 Join the Beta Program:</strong></p>
+                <p style="margin: 0;"><a href="https://testflight.apple.com/join/jtfwA6bG" style="display: inline-block; background: #FF9F0A; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: background 0.3s ease;" onmouseover="this.style.background='#FF7F50'" onmouseout="this.style.background='#FF9F0A'">Download TestFlight Beta</a></p>
+            </div>
         </div>
 
-        <div class="test-categories">
+        <div class="nav-tabs">
+            <button class="active" onclick="showSection('checklist')">✅ Testing Checklist</button>
+            <button onclick="showSection('license')">⚖️ License Agreement</button>
+        </div>
+
+        <!-- Testing Checklist Section -->
+        <div id="checklist" class="section active">
+            <p style="margin-bottom: 20px; color: #666;"><strong>Below is a comprehensive list of features and areas we need you to test.</strong> Found a bug? Use the feedback form at the bottom or email <a href="mailto:feedback@orangemac.com">feedback@orangemac.com</a> with details.</p>
+
+            <div class="test-categories">
             <!-- Core Features -->
             <div class="test-card">
                 <h3><span class="icon">📰</span>Core Features</h3>
@@ -544,15 +646,84 @@
             </div>
         </div>
 
-        <div class="feedback-section">
-            <h3>Report Issues or Feedback</h3>
-            <p>Found a bug? Have a suggestion? We'd love to hear from you! Please provide as much detail as possible to help us improve Slice.</p>
-            <div class="feedback-form">
-                <input type="email" placeholder="Your email (optional)" id="feedback-email">
-                <input type="text" placeholder="Brief description of issue/feedback" id="feedback-text" style="flex: 2;">
-                <button onclick="submitFeedback()">Send Feedback</button>
+            <div class="feedback-section">
+                <h3>Report Issues or Feedback</h3>
+                <p>Found a bug? Have a suggestion? We'd love to hear from you! Please provide as much detail as possible to help us improve Slice.</p>
+                <div class="feedback-form">
+                    <input type="email" placeholder="Your email (optional)" id="feedback-email">
+                    <input type="text" placeholder="Brief description of issue/feedback" id="feedback-text" style="flex: 2;">
+                    <button onclick="submitFeedback()">Send Feedback</button>
+                </div>
+                <p style="margin-top: 12px; font-size: 0.9em;">Or email us directly at <a href="mailto:feedback@orangemac.com">feedback@orangemac.com</a></p>
             </div>
-            <p style="margin-top: 12px; font-size: 0.9em;">Or email us directly at <a href="mailto:feedback@orangemac.com">feedback@orangemac.com</a></p>
+        </div>
+
+        <!-- License Agreement Section -->
+        <div id="license" class="section license-section">
+            <div class="legal-notice">
+                <strong>IMPORTANT:</strong> This is a beta version of Slice News Reader distributed through Apple's TestFlight program. By downloading, installing, and using this beta software, you agree to the terms and conditions outlined below.
+            </div>
+
+            <h2>1. License Grant</h2>
+            <p>OrangeMac LLC ("Company") grants you a limited, non-exclusive, non-transferable, revocable license to use the Slice News Reader beta application ("Application") on your compatible iOS device, solely for the purposes of testing and evaluating the Application during the beta testing period.</p>
+            <p>This license does not include the right to:</p>
+            <ul>
+                <li>Sublicense, sell, rent, lease, transfer, assign, or otherwise dispose of the Application</li>
+                <li>Reverse engineer, decompile, disassemble, or attempt to derive the source code of the Application</li>
+                <li>Modify, translate, adapt, or create derivative works based on the Application</li>
+                <li>Use the Application for commercial purposes or to provide services to third parties</li>
+                <li>Remove or alter any proprietary notices, labels, or marks on the Application</li>
+            </ul>
+
+            <h2>2. Beta Testing Nature</h2>
+            <p><strong>Acknowledgment of Beta Status:</strong> You acknowledge that the Application is a beta version and has not been commercially released. The Application may contain errors, bugs, incomplete features, and other defects that could cause system failures, data loss, or other unexpected behavior.</p>
+            <p><strong>No Warranty:</strong> The Application is provided "AS IS" and "AS AVAILABLE" without warranties of any kind, either express or implied. Company disclaims all warranties, including but not limited to warranties of merchantability or fitness for a particular purpose.</p>
+
+            <h2>3. Data and Privacy</h2>
+            <p><strong>Data Collection:</strong> As a beta participant, you consent to the collection of diagnostic data, usage statistics, crash reports, and performance metrics to help improve the Application.</p>
+            <p><strong>Privacy:</strong> All collected data will be handled in accordance with our Privacy Policy. By participating in beta testing, you consent to this data collection and processing.</p>
+            <p><strong>Personal Information:</strong> Do not use the Application with sensitive personal information, financial data, passwords, or other confidential information. As a beta product, the Application may not have production-level security measures in place.</p>
+
+            <h2>4. Feedback and Contributions</h2>
+            <p><strong>License to Feedback:</strong> Any feedback, suggestions, bug reports, feature requests, or other communications you provide regarding the Application ("Feedback") may be used by Company without restriction or compensation. You grant Company a non-exclusive, worldwide, royalty-free right to use such Feedback for any purpose.</p>
+
+            <h2>5. Intellectual Property Rights</h2>
+            <p>All intellectual property rights in the Application, including but not limited to copyrights, patents, trademarks, trade secrets, and logos, are owned by Company or its licensors. You may not use any Company trademarks, service marks, or logos without prior written permission.</p>
+
+            <h2>6. Restrictions and Prohibited Use</h2>
+            <p>You agree not to:</p>
+            <ul>
+                <li>Use the Application in violation of any applicable laws, regulations, or third-party rights</li>
+                <li>Hack, modify, or tamper with the Application or its security measures</li>
+                <li>Use the Application to harm, harass, threaten, or abuse others</li>
+                <li>Distribute, copy, or share the Application or any portion thereof with unauthorized individuals</li>
+                <li>Use the Application for illegal purposes, including unauthorized data scraping or circumventing access controls</li>
+            </ul>
+
+            <h2>7. Limitation of Liability</h2>
+            <p><strong>TO THE MAXIMUM EXTENT PERMITTED BY LAW, COMPANY'S TOTAL LIABILITY TO YOU SHALL NOT EXCEED $1.00 (USD).</strong> Company shall not be liable for any indirect, incidental, special, consequential, or punitive damages.</p>
+
+            <h2>8. Termination</h2>
+            <p><strong>Termination by Company:</strong> Company may terminate this License Agreement and your access to the Application at any time, for any reason. Upon termination, you must immediately uninstall the Application and delete any copies in your possession.</p>
+
+            <h2>9. Confidentiality</h2>
+            <p>You agree to keep the existence and details of the beta version confidential. You may not disclose the Application's features, functionality, or your access to the beta program to unauthorized individuals without Company's prior written consent.</p>
+
+            <h2>10. Compliance with TestFlight Terms</h2>
+            <p>Your participation in the TestFlight beta program is also subject to Apple's TestFlight Terms of Service. In the event of any conflict between this Agreement and Apple's terms, Apple's terms shall govern your use of the TestFlight service.</p>
+
+            <h2>11. Governing Law</h2>
+            <p>This License Agreement shall be governed by and construed in accordance with the laws of the State of South Carolina, United States. Any legal action relating to this Agreement shall be brought exclusively in the state or federal courts located in South Carolina.</p>
+
+            <h2>12. Contact Information</h2>
+            <p>If you have questions about this License Agreement or wish to report issues, please contact:<br>
+            <strong>Email:</strong> <a href="mailto:feedback@orangemac.com">feedback@orangemac.com</a></p>
+
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                <p><strong>ACKNOWLEDGMENT:</strong></p>
+                <p>By downloading and installing the Slice News Reader beta application through TestFlight, you acknowledge that you have read this License Agreement, understand its terms and conditions, and agree to be bound by them.</p>
+                <p style="margin-top: 15px; color: #666; font-size: 0.95em;">Last Updated: March 31, 2026 | © 2026 OrangeMac LLC. All rights reserved.</p>
+            </div>
         </div>
     </div>
 
@@ -561,6 +732,23 @@
     </footer>
 
     <script>
+        // Tab switching
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            const buttons = document.querySelectorAll('.nav-tabs button');
+
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
         // Update progress tracking
         function updateProgress() {
             const checkboxes = document.querySelectorAll('.checkbox');
