@@ -346,7 +346,7 @@
         <div class="header-content">
             <h1>Beta Testing</h1>
             <p>Help us test Slice and shape the future</p>
-            <p class="subtitle">Version 1.0 Beta</p>
+            <p class="subtitle">Version 1.01 Beta</p>
         </div>
     </header>
 
@@ -388,7 +388,7 @@
                         </li>
                         <li>
                             <input type="checkbox" id="t3" class="checkbox">
-                            <label for="t3">Tap an article to read it</label>
+                            <label for="t3">Tap an article to read it — text and images render correctly with left and right margins</label>
                             <span class="status-badge status-critical">Critical</span>
                         </li>
                         <li>
@@ -425,13 +425,13 @@
                         </li>
                         <li>
                             <input type="checkbox" id="t9" class="checkbox">
-                            <label for="t9">Feed icons load; missing ones show accent badge</label>
-                            <span class="status-badge status-fixed">Fixed</span>
+                            <label for="t9">Unread count badge updates as articles are read</label>
+                            <span class="status-badge status-critical">Critical</span>
                         </li>
                         <li>
                             <input type="checkbox" id="t10" class="checkbox">
-                            <label for="t10">Unread count badge updates after reading</label>
-                            <span class="status-badge status-critical">Critical</span>
+                            <label for="t10">When all articles in a feed are read, article text left-aligns with the feed icon above it</label>
+                            <span class="status-badge status-new">New</span>
                         </li>
                     </ul>
                 </div>
@@ -442,32 +442,27 @@
                     <ul class="test-items">
                         <li>
                             <input type="checkbox" id="t11" class="checkbox">
-                            <label for="t11">Tap an episode to open the player (not article view)</label>
-                            <span class="status-badge status-fixed">Fixed</span>
+                            <label for="t11">Play, pause, skip back 15 s, and change speed</label>
+                            <span class="status-badge status-critical">Critical</span>
                         </li>
                         <li>
                             <input type="checkbox" id="t12" class="checkbox">
-                            <label for="t12">Play, pause, skip back, and change speed</label>
+                            <label for="t12">Mini-player persists and controls playback while browsing other tabs</label>
                             <span class="status-badge status-critical">Critical</span>
                         </li>
                         <li>
                             <input type="checkbox" id="t13" class="checkbox">
-                            <label for="t13">Mini-player persists while browsing other tabs</label>
-                            <span class="status-badge status-new">Feature</span>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="t14" class="checkbox">
-                            <label for="t14">Audio continues in background and on lock screen</label>
+                            <label for="t13">Audio continues in background and on lock screen</label>
                             <span class="status-badge status-critical">Critical</span>
                         </li>
                         <li>
-                            <input type="checkbox" id="t15" class="checkbox">
-                            <label for="t15">Playback position resumes after closing and reopening</label>
+                            <input type="checkbox" id="t14" class="checkbox">
+                            <label for="t14">Playback position resumes after closing and reopening the app</label>
                             <span class="status-badge status-new">Feature</span>
                         </li>
                         <li>
-                            <input type="checkbox" id="t16" class="checkbox">
-                            <label for="t16">Smart Squeeze removes silence during playback</label>
+                            <input type="checkbox" id="t15" class="checkbox">
+                            <label for="t15">Smart Squeeze removes silence during playback</label>
                             <span class="status-badge status-new">Feature</span>
                         </li>
                     </ul>
@@ -478,18 +473,13 @@
                     <h3><span class="icon">🔭</span>Discover</h3>
                     <ul class="test-items">
                         <li>
+                            <input type="checkbox" id="t16" class="checkbox">
+                            <label for="t16">Browse feeds by category (News, Tech, Science, etc.)</label>
+                            <span class="status-badge status-new">Feature</span>
+                        </li>
+                        <li>
                             <input type="checkbox" id="t17" class="checkbox">
-                            <label for="t17">Browse feeds by category (News, Tech, Science, etc.)</label>
-                            <span class="status-badge status-new">Feature</span>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="t18" class="checkbox">
-                            <label for="t18">Podcasts tab shows live Apple Charts Top 50</label>
-                            <span class="status-badge status-new">Feature</span>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="t19" class="checkbox">
-                            <label for="t19">Add a feed from Discover — appears in Feeds tab</label>
+                            <label for="t17">Add a feed from Discover — it appears in the Feeds tab</label>
                             <span class="status-badge status-critical">Critical</span>
                         </li>
                     </ul>
@@ -500,29 +490,46 @@
                     <h3><span class="icon">⚙️</span>Settings</h3>
                     <ul class="test-items">
                         <li>
+                            <input type="checkbox" id="t18" class="checkbox">
+                            <label for="t18">Change accent color and theme (Light / Dark / System)</label>
+                            <span class="status-badge status-new">Feature</span>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="t19" class="checkbox">
+                            <label for="t19">Dark icon applies automatically when phone switches to dark icons (iOS 18 home screen setting)</label>
+                            <span class="status-badge status-new">New</span>
+                        </li>
+                        <li>
                             <input type="checkbox" id="t20" class="checkbox">
-                            <label for="t20">Change accent color and theme (Light / Dark / System)</label>
+                            <label for="t20">Toggle Smart Stitch, Privacy Minder, Infinity Reading — behavior changes immediately</label>
                             <span class="status-badge status-new">Feature</span>
                         </li>
                         <li>
                             <input type="checkbox" id="t21" class="checkbox">
-                            <label for="t21">Switch app icon between Standard and Dark</label>
-                            <span class="status-badge status-fixed">Fixed</span>
+                            <label for="t21">Add keyword filters — articles containing blocked words are hidden</label>
+                            <span class="status-badge status-new">Feature</span>
                         </li>
                         <li>
                             <input type="checkbox" id="t22" class="checkbox">
-                            <label for="t22">Toggle Smart Squeeze, Privacy Minder, Infinity Reading</label>
+                            <label for="t22">Export feeds as OPML; import that file into another RSS reader</label>
                             <span class="status-badge status-new">Feature</span>
                         </li>
+                    </ul>
+                </div>
+
+                <!-- Notifications & Refresh -->
+                <div class="test-card">
+                    <h3><span class="icon">🔔</span>Notifications &amp; Refresh</h3>
+                    <ul class="test-items">
                         <li>
                             <input type="checkbox" id="t23" class="checkbox">
-                            <label for="t23">Add keyword filters — blocked words hide articles</label>
-                            <span class="status-badge status-new">Feature</span>
+                            <label for="t23">New articles appear without manually opening the app (background refresh every ~30 min)</label>
+                            <span class="status-badge status-new">New</span>
                         </li>
                         <li>
                             <input type="checkbox" id="t24" class="checkbox">
-                            <label for="t24">Export feeds as OPML; import into another app</label>
-                            <span class="status-badge status-new">Feature</span>
+                            <label for="t24">Notification arrives when a feed has new content; shows correct count and feed name. Notification clears after opening the app.</label>
+                            <span class="status-badge status-new">New</span>
                         </li>
                     </ul>
                 </div>
@@ -533,7 +540,7 @@
                     <ul class="test-items">
                         <li>
                             <input type="checkbox" id="t25" class="checkbox">
-                            <label for="t25">iPhone and iPad — layout looks correct on both</label>
+                            <label for="t25">iPhone and iPad — layout, margins, and article text look correct on both</label>
                             <span class="status-badge status-critical">Critical</span>
                         </li>
                     </ul>
@@ -546,7 +553,7 @@
                 <div class="stat-row">
                     <span>Items Tested</span>
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <span id="completed-count">0</span> / <span id="total-count">47</span>
+                        <span id="completed-count">0</span> / <span id="total-count">25</span>
                         <div class="progress-bar">
                             <div class="progress-fill" id="progress" style="width: 0%"></div>
                         </div>
@@ -634,7 +641,7 @@
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
                 <p><strong>ACKNOWLEDGMENT:</strong></p>
                 <p>By downloading and installing the Slice News Reader beta application through TestFlight, you acknowledge that you have read this License Agreement, understand its terms and conditions, and agree to be bound by them.</p>
-                <p style="margin-top: 15px; color: #666; font-size: 0.95em;">Last Updated: April 3, 2026 | © 2026 OrangeMac LLC. All rights reserved.</p>
+                <p style="margin-top: 15px; color: #666; font-size: 0.95em;">Last Updated: April 6, 2026 | © 2026 OrangeMac LLC. All rights reserved.</p>
             </div>
         </div>
     </div>
