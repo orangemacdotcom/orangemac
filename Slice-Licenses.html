@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Licenses – Slice</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: #222;
+      background: #f9f9f9;
+    }
+
+    header {
+      background: linear-gradient(135deg, #FF9F0A 0%, #FF7F50 100%);
+      color: white;
+      padding: 30px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 25px;
+    }
+
+    .header-icon {
+      flex-shrink: 0;
+    }
+
+    .header-icon img {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .header-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    header h1 {
+      font-size: 2.2em;
+      margin: 0;
+      margin-bottom: 5px;
+      line-height: 1.1;
+    }
+
+    header .app-name {
+      font-size: 0.95em;
+      margin: 0;
+      opacity: 0.95;
+      line-height: 1.3;
+    }
+
+    .content-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #FF9F0A;
+      margin-top: 40px;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #FF9F0A;
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #333;
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin-bottom: 14px;
+      color: #333;
+    }
+
+    ul {
+      margin: 10px 0 16px 0;
+      padding-left: 24px;
+    }
+
+    ul li {
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .license-block {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+    }
+
+    .license-block h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: #1a1a2e;
+    }
+
+    .license-meta {
+      font-size: 0.88rem;
+      color: #888;
+      margin-bottom: 12px;
+    }
+
+    .license-badge {
+      display: inline-block;
+      background: #FF9F0A;
+      color: white;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin-left: 8px;
+      vertical-align: middle;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .license-badge.apache {
+      background: #4a90d9;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      font-size: 0.82rem;
+      color: #aaa;
+      font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        gap: 20px;
+        padding: 25px 15px;
+      }
+
+      .header-icon img {
+        width: 64px;
+        height: 64px;
+      }
+
+      header h1 {
+        font-size: 1.8em;
+      }
+
+      header .app-name {
+        font-size: 0.9em;
+      }
+
+      .content-wrapper { padding: 25px 15px 60px; }
+
+      .license-block { padding: 18px 16px; }
+    }
+
+    @media print {
+      body { max-width: 100%; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-icon">
+      <img src="Slice-AppIcon.png" alt="Slice App Icon">
+    </div>
+    <div class="header-content">
+      <h1>Licenses</h1>
+      <div class="app-name">Slice by OrangeMac</div>
+    </div>
+  </header>
+
+  <div class="content-wrapper">
+
+    <p>Slice includes the following open-source typefaces. Each font is used in accordance with its respective license. Full license texts are available at the links provided below.</p>
+
+    <h2>Bundled Fonts</h2>
+
+    <div class="license-block">
+      <h3>Inter <span class="license-badge">SIL OFL 1.1</span></h3>
+      <div class="license-meta">Copyright © 2016–2020 The Inter Project Authors</div>
+      <p>Inter is a typeface designed for computer screens, developed by Rasmus Andersson and the Inter Project Authors.</p>
+      <p>Licensed under the <strong>SIL Open Font License, Version 1.1</strong>. You may use, study, modify, and redistribute this font freely, provided that the font is not sold by itself and that any derivative works are distributed under the same license.</p>
+      <p>Source &amp; license: <a href="https://github.com/rsms/inter" target="_blank" rel="noopener noreferrer">github.com/rsms/inter</a></p>
+    </div>
+
+    <div class="license-block">
+      <h3>Lato <span class="license-badge">SIL OFL 1.1</span></h3>
+      <div class="license-meta">Copyright © 2010–2014 Łukasz Dziedzic</div>
+      <p>Lato is a sans-serif typeface designed by Łukasz Dziedzic ("Lato" means "Summer" in Polish). It balances warmth and stability for both body text and headlines.</p>
+      <p>Licensed under the <strong>SIL Open Font License, Version 1.1</strong>. You may use, study, modify, and redistribute this font freely, provided that the font is not sold by itself and that any derivative works are distributed under the same license.</p>
+      <p>Source &amp; license: <a href="https://fonts.google.com/specimen/Lato" target="_blank" rel="noopener noreferrer">fonts.google.com/specimen/Lato</a></p>
+    </div>
+
+    <div class="license-block">
+      <h3>Noto Sans <span class="license-badge">SIL OFL 1.1</span></h3>
+      <div class="license-meta">Copyright © 2022 The Noto Project Authors</div>
+      <p>Noto Sans is part of Google's Noto font family, designed to support all the world's languages with a harmonious look and feel across scripts.</p>
+      <p>Licensed under the <strong>SIL Open Font License, Version 1.1</strong>. You may use, study, modify, and redistribute this font freely, provided that the font is not sold by itself and that any derivative works are distributed under the same license.</p>
+      <p>Source &amp; license: <a href="https://github.com/notofonts/latin-greek-cyrillic" target="_blank" rel="noopener noreferrer">github.com/notofonts/latin-greek-cyrillic</a></p>
+    </div>
+
+    <div class="license-block">
+      <h3>Open Sans <span class="license-badge apache">Apache 2.0</span></h3>
+      <div class="license-meta">Copyright © 2020 The Open Sans Project Authors</div>
+      <p>Open Sans is a humanist sans-serif typeface designed by Steve Matteson and commissioned by Google for use across a wide range of applications.</p>
+      <p>Licensed under the <strong>Apache License, Version 2.0</strong>. You may use, reproduce, and distribute this font (with or without modifications) for any purpose, provided that you include the required copyright notice and license text in any redistribution.</p>
+      <p>Source &amp; license: <a href="https://github.com/googlefonts/opensans" target="_blank" rel="noopener noreferrer">github.com/googlefonts/opensans</a></p>
+    </div>
+
+    <div class="license-block">
+      <h3>Roboto <span class="license-badge apache">Apache 2.0</span></h3>
+      <div class="license-meta">Copyright © 2011 Google Inc.</div>
+      <p>Roboto is the default typeface for Android and Google's material design system. It features friendly and open curves while remaining geometric at its core.</p>
+      <p>Licensed under the <strong>Apache License, Version 2.0</strong>. You may use, reproduce, and distribute this font (with or without modifications) for any purpose, provided that you include the required copyright notice and license text in any redistribution.</p>
+      <p>Source &amp; license: <a href="https://github.com/googlefonts/roboto" target="_blank" rel="noopener noreferrer">github.com/googlefonts/roboto</a></p>
+    </div>
+
+    <h2>License Summaries</h2>
+
+    <h3>SIL Open Font License 1.1 (OFL)</h3>
+    <p>The SIL Open Font License is a free, open-source license specifically designed for fonts. Key terms:</p>
+    <ul>
+      <li>You may freely use, study, copy, merge, embed, modify, and redistribute the fonts.</li>
+      <li>Fonts (or derivatives) may not be sold on their own — they must be bundled with software or other products.</li>
+      <li>Derivative fonts must be released under the same OFL license.</li>
+      <li>The original copyright notice and license must be included in any redistribution.</li>
+    </ul>
+    <p>Full license text: <a href="https://openfontlicense.org/open-font-license-official-text/" target="_blank" rel="noopener noreferrer">openfontlicense.org</a></p>
+
+    <h3>Apache License 2.0</h3>
+    <p>The Apache License 2.0 is a permissive open-source license. Key terms:</p>
+    <ul>
+      <li>You may use, reproduce, distribute, and create derivative works for any purpose, commercial or non-commercial.</li>
+      <li>Any redistribution must include a copy of the Apache License 2.0 and any applicable NOTICE file.</li>
+      <li>Modifications must be clearly stated.</li>
+      <li>The license does not grant trademark rights.</li>
+    </ul>
+    <p>Full license text: <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">apache.org/licenses/LICENSE-2.0</a></p>
+
+    <footer>
+      © 2026 OrangeMac LLC. All rights reserved. &nbsp;|&nbsp; <a href="index.html" style="color: #aaa; text-decoration: none;">Back to Slice</a>
+    </footer>
+
+  </div>
+
+</body>
+</html>
