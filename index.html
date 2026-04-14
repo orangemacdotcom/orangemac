@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-  <meta name="theme-color" content="#FF9F0A">
+  <meta name="theme-color" content="#FF7500">
   <title>OrangeMac - Slice News Reader</title>
   <style>
     * {
@@ -24,7 +24,7 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #FF9F0A 0%, #FF7F50 100%);
+      background: linear-gradient(160deg, #FF6000 0%, #FFA000 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -49,10 +49,21 @@
       margin-bottom: 40px;
     }
 
-    .logo img {
+    .logo .wordmark {
       width: 100%;
       max-width: 600px;
       height: auto;
+    }
+
+    .app-icon-wrap {
+      margin-bottom: 20px;
+    }
+
+    .app-icon-wrap img {
+      width: 100px;
+      height: 100px;
+      border-radius: 22px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
     }
 
     h1 {
@@ -80,7 +91,7 @@
       display: inline-block;
       padding: 15px 40px;
       background: white;
-      color: #FF7F50;
+      color: #FF5000;
       text-decoration: none;
       border-radius: 50px;
       font-weight: 600;
@@ -142,8 +153,13 @@
         font-size: 0.95em;
       }
 
-      .logo img {
+      .logo .wordmark {
         max-width: 80%;
+      }
+
+      .app-icon-wrap img {
+        width: 80px;
+        height: 80px;
       }
     }
   </style>
@@ -151,7 +167,11 @@
 <body>
   <div class="container">
     <div class="logo">
-      <img src="OrangeMac.png" alt="OrangeMac">
+      <img src="OrangeMac.png" alt="OrangeMac" class="wordmark">
+    </div>
+
+    <div class="app-icon-wrap">
+      <img src="apple-touch-icon.png" alt="Slice">
     </div>
 
     <h1>Slice News Reader</h1>
