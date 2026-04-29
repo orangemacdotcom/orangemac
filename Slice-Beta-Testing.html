@@ -398,7 +398,7 @@
                         </li>
                         <li>
                             <input type="checkbox" id="t4" class="checkbox">
-                            <label for="t4">Mark articles as read</label>
+                            <label for="t4">Mark articles as read; swipe right on an article row to toggle read/unread instantly</label>
                             <span class="status-badge status-critical">Critical</span>
                         </li>
                         <li>
@@ -425,7 +425,7 @@
                         </li>
                         <li>
                             <input type="checkbox" id="t8" class="checkbox">
-                            <label for="t8">Swipe right to favorite or mute; swipe left to delete</label>
+                            <label for="t8">Swipe right to favorite or mute a feed; swipe left to delete</label>
                             <span class="status-badge status-critical">Critical</span>
                         </li>
                         <li>
@@ -435,7 +435,7 @@
                         </li>
                         <li>
                             <input type="checkbox" id="t10" class="checkbox">
-                            <label for="t10">When all articles in a feed are read, article text left-aligns with the feed icon above it</label>
+                            <label for="t10">All Articles and Unread Articles smart lists appear at the top of the Feeds tab; toggle either off in Settings → Feed Management</label>
                             <span class="status-badge status-new">New</span>
                         </li>
                     </ul>
@@ -457,18 +457,18 @@
                         </li>
                         <li>
                             <input type="checkbox" id="t13" class="checkbox">
-                            <label for="t13">Audio continues in background and on lock screen</label>
+                            <label for="t13">Audio continues in background and on lock screen; lock screen controls work</label>
                             <span class="status-badge status-critical">Critical</span>
                         </li>
                         <li>
                             <input type="checkbox" id="t14" class="checkbox">
-                            <label for="t14">Playback position resumes after closing and reopening the app</label>
+                            <label for="t14">Playback position resumes after force-quitting and reopening the app</label>
                             <span class="status-badge status-new">Feature</span>
                         </li>
                         <li>
                             <input type="checkbox" id="t15" class="checkbox">
-                            <label for="t15">Smart Squeeze removes silence during playback</label>
-                            <span class="status-badge status-new">Feature</span>
+                            <label for="t15">Continuous Playback — enable in Settings; next unplayed episode starts automatically when the current one finishes</label>
+                            <span class="status-badge status-new">New</span>
                         </li>
                     </ul>
                 </div>
@@ -479,12 +479,7 @@
                     <ul class="test-items">
                         <li>
                             <input type="checkbox" id="t16" class="checkbox">
-                            <label for="t16">Browse feeds by category (News, Tech, Science, etc.)</label>
-                            <span class="status-badge status-new">Feature</span>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="t17" class="checkbox">
-                            <label for="t17">Add a feed from Discover — it appears in the Feeds tab</label>
+                            <label for="t16">Browse feeds by category (News, Tech, Science, etc.); add a feed from Discover — it appears in the Feeds tab</label>
                             <span class="status-badge status-critical">Critical</span>
                         </li>
                     </ul>
@@ -495,25 +490,37 @@
                     <h3><span class="icon">⚙️</span>Settings</h3>
                     <ul class="test-items">
                         <li>
+                            <input type="checkbox" id="t17" class="checkbox">
+                            <label for="t17">Change accent color and theme (Light / Dark / System)</label>
+                            <span class="status-badge status-new">Feature</span>
+                        </li>
+                        <li>
                             <input type="checkbox" id="t18" class="checkbox">
-                            <label for="t18">Change accent color and theme (Light / Dark / System)</label>
+                            <label for="t18">Toggle Smart Stitch, Privacy Minder, Smart Squeeze, and Infinity Reading — behavior changes immediately</label>
                             <span class="status-badge status-new">Feature</span>
                         </li>
                         <li>
                             <input type="checkbox" id="t19" class="checkbox">
-                            <label for="t19">Dark icon applies automatically when phone switches to dark icons (iOS 18 home screen setting)</label>
+                            <label for="t19">Offline Reading — set to On, Per Feed, or Off; cached content loads without an internet connection</label>
                             <span class="status-badge status-new">New</span>
                         </li>
                         <li>
                             <input type="checkbox" id="t20" class="checkbox">
-                            <label for="t20">Toggle Smart Stitch, Privacy Minder, Infinity Reading — behavior changes immediately</label>
+                            <label for="t20">Add keyword filters — articles containing blocked words are hidden</label>
                             <span class="status-badge status-new">Feature</span>
                         </li>
                         <li>
                             <input type="checkbox" id="t21" class="checkbox">
-                            <label for="t21">Add keyword filters — articles containing blocked words are hidden</label>
-                            <span class="status-badge status-new">Feature</span>
+                            <label for="t21">iCloud Sync — enable and verify feeds and settings appear on a second device after a short wait</label>
+                            <span class="status-badge status-new">New</span>
                         </li>
+                    </ul>
+                </div>
+
+                <!-- Data -->
+                <div class="test-card">
+                    <h3><span class="icon">💾</span>Data</h3>
+                    <ul class="test-items">
                         <li>
                             <input type="checkbox" id="t22" class="checkbox">
                             <label for="t22">Export feeds as OPML; import that file into another RSS reader</label>
@@ -533,7 +540,7 @@
                         </li>
                         <li>
                             <input type="checkbox" id="t24" class="checkbox">
-                            <label for="t24">Notification arrives when a feed has new content; shows correct count and feed name. Notification clears after opening the app.</label>
+                            <label for="t24">Notification arrives when a feed has new content; tapping it opens the correct feed</label>
                             <span class="status-badge status-new">New</span>
                         </li>
                     </ul>
